@@ -1,5 +1,6 @@
 package PortalTADS.usuarioService.service;
 
+import PortalTADS.usuarioService.enums.roleUsuario;
 import PortalTADS.usuarioService.model.dto.usuarioRequestDTO;
 import PortalTADS.usuarioService.model.dto.usuarioResponseDTO;
 import PortalTADS.usuarioService.model.mapper.usuarioMapper;
@@ -18,7 +19,7 @@ public class usuarioService {
 
     public usuarioResponseDTO salvarUsuario(usuarioRequestDTO record) {
         usuario usuarioModel = mapper.toModel(record);
-
+        usuarioModel.setRole(roleUsuario.USER);
         usuarioEntity entity = mapper.toEntity(usuarioModel);
         repository.save(entity);
         return mapper.toResponse(entity);
