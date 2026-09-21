@@ -24,4 +24,9 @@ public class usuarioService {
         repository.save(entity);
         return mapper.toResponse(entity);
     }
+
+    public usuarioResponseDTO buscarUsuario(Long id) {
+        usuarioEntity entity = repository.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        return mapper.toResponse(entity);
+    }
 }
