@@ -29,4 +29,10 @@ public class usuarioController {
         usuarioResponseDTO response = service.buscarUsuario(id);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<usuarioResponseDTO> atualizarUsuario(@PathVariable Long id, @RequestBody usuarioRequestDTO record) {
+        usuarioResponseDTO response = service.atualizarUsuario(id, record);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 }
