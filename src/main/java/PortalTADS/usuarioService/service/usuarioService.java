@@ -39,4 +39,6 @@ public class usuarioService {
         repository.save(updatedEntity);
         return mapper.toResponse(updatedEntity);
     }
+
+    /////
 }
