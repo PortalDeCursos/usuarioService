@@ -4,7 +4,8 @@
 
 CREATE TYPE tipo_usuario AS ENUM (
     'ADMIN',
-    'PROFESSOR'
+    'PROFESSOR',
+    'ALUNO'
 );
 
 CREATE TYPE titulacao AS ENUM (
