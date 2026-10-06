@@ -45,9 +45,6 @@ CREATE TABLE professor (
 
    CONSTRAINT fk_professor_usuario
        FOREIGN KEY (usuario_id)
-           REFERENCES usuario(id),
+           REFERENCES usuario(id)
 
-   CONSTRAINT fk_professor_curso
-       FOREIGN KEY (curso_id)
-           REFERENCES curso(id)
 );
