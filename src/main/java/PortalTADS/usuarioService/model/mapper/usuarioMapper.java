@@ -10,6 +10,7 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface usuarioMapper {
     usuario toModel(usuarioRequestDTO record);
+    usuario toModel(usuarioEntity entity);
 
     usuarioEntity toEntity(usuario usuarioModel);
 
