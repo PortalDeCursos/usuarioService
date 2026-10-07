@@ -35,4 +35,10 @@ public class usuarioController {
         usuarioResponseDTO response = service.atualizarUsuario(id, record);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletarUsuario(@PathVariable Long id) {
+        service.deletar(id);
+        return ResponseEntity.noContent().build();
+    }
 }
