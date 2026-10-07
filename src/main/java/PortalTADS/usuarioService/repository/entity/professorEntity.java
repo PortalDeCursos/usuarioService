@@ -20,10 +20,11 @@ public class professorEntity {
     @EqualsAndHashCode.Include
     private Long id;
 
-    @Column(name = "usuario_id", nullable = false)
-    private Long usuarioId;
+    @OneToOne
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private usuarioEntity usuario;
 
-    @Column(name = "curso_id", nullable = false)
+    @Column(name = "curso_id")
     private Long cursoId;
 
     @Enumerated(EnumType.STRING)
