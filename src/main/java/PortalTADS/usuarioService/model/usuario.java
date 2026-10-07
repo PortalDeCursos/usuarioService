@@ -14,6 +14,6 @@ public class usuario {
     private String nome;
     private String email;
     private String senha;
-    private String matricula;
-    private roleUsuario role;
+    private String username;
+    private roleUsuario tipoUsuario;
 }

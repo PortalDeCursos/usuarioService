@@ -8,7 +8,6 @@ public record usuarioRequestDTO(
         String nome,
         String email,
         String senha,
-        String matricula,
-        roleUsuario role
+        String username
 ) {
 }
