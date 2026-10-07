@@ -19,7 +19,7 @@ public class usuarioService {
 
     public usuarioResponseDTO salvarUsuario(usuarioRequestDTO record) {
         usuario usuarioModel = mapper.toModel(record);
-        usuarioModel.setRole(roleUsuario.USER);
+        usuarioModel.setTipoUsuario(roleUsuario.USER);
         usuarioEntity entity = mapper.toEntity(usuarioModel);
         repository.save(entity);
         return mapper.toResponse(entity);
@@ -34,10 +34,19 @@ public class usuarioService {
         usuarioEntity entity = repository.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
         usuario usuarioModel = mapper.toModel(record);
         usuarioModel.setId(entity.getId());
-        usuarioModel.setRole(roleUsuario.USER);
+        usuarioModel.setTipoUsuario(roleUsuario.USER);
         usuarioEntity updatedEntity = mapper.toEntity(usuarioModel);
         repository.save(updatedEntity);
         return mapper.toResponse(updatedEntity);
+    }
+
+    public void deletar(Long id) {
+
+        if(!repository.existsById(id)) {
+            throw new RuntimeException("Usuário não encontrado");
+        }
+
+        repository.deleteById(id);
     }
 
     /////
