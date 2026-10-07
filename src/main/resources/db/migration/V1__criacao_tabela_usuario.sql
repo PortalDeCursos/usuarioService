@@ -27,7 +27,9 @@ CREATE TABLE usuario (
      email VARCHAR(255) NOT NULL UNIQUE,
      username VARCHAR(255) NOT NULL UNIQUE,
      senha VARCHAR(255) NOT NULL,
-     tipo_usuario tipo_usuario NOT NULL
+     tipo_usuario tipo_usuario NOT NULL,
+     criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+
 );
 
 
