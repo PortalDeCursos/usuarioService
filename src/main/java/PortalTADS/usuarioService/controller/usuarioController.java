@@ -1,7 +1,7 @@
 package PortalTADS.usuarioService.controller;
 
-import PortalTADS.usuarioService.model.dto.usuarioRequestDTO;
-import PortalTADS.usuarioService.model.dto.usuarioResponseDTO;
+import PortalTADS.usuarioService.model.dto.usuario.usuarioRequestDTO;
+import PortalTADS.usuarioService.model.dto.usuario.usuarioResponseDTO;
 import PortalTADS.usuarioService.service.usuarioService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;

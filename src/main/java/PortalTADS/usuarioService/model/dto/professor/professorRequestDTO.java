@@ -1,4 +1,4 @@
-package PortalTADS.usuarioService.model.dto;
+package PortalTADS.usuarioService.model.dto.professor;
 
 import PortalTADS.usuarioService.enums.titulacaoProfessor;
 

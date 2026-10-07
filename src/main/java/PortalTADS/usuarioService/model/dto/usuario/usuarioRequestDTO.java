@@ -1,7 +1,4 @@
-package PortalTADS.usuarioService.model.dto;
-
-import PortalTADS.usuarioService.enums.roleUsuario;
-
+package PortalTADS.usuarioService.model.dto.usuario;
 
 
 public record usuarioRequestDTO(

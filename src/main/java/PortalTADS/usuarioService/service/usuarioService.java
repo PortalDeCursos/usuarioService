@@ -1,8 +1,8 @@
 package PortalTADS.usuarioService.service;
 
 import PortalTADS.usuarioService.enums.roleUsuario;
-import PortalTADS.usuarioService.model.dto.usuarioRequestDTO;
-import PortalTADS.usuarioService.model.dto.usuarioResponseDTO;
+import PortalTADS.usuarioService.model.dto.usuario.usuarioRequestDTO;
+import PortalTADS.usuarioService.model.dto.usuario.usuarioResponseDTO;
 import PortalTADS.usuarioService.model.mapper.usuarioMapper;
 import PortalTADS.usuarioService.model.usuario;
 import PortalTADS.usuarioService.repository.entity.usuarioEntity;
