@@ -23,7 +23,7 @@ CREATE TABLE professor (
    id BIGSERIAL PRIMARY KEY,
 
    usuario_id BIGINT NOT NULL,
-   curso_id BIGINT NOT NULL,
+   curso_id BIGINT,
 
    titulacao VARCHAR(255) NOT NULL,
    descricao VARCHAR(255),

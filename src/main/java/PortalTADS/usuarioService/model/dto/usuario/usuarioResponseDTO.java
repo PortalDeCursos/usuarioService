@@ -1,4 +1,4 @@
-package PortalTADS.usuarioService.model.dto;
+package PortalTADS.usuarioService.model.dto.usuario;
 
 import PortalTADS.usuarioService.enums.roleUsuario;
 import lombok.AllArgsConstructor;
