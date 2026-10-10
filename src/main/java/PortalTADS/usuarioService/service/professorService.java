@@ -48,4 +48,9 @@ public class professorService {
         List<professorEntity> entities = professorRepository.findAll();
         return professorMapper.toResponseList(entities);
     }
+
+    public List<professorResponseDTO> buscarProfessoresPorNome(String nome) {
+        List<professorEntity> entities = professorRepository.buscarPorNomeUsuario(nome);
+        return professorMapper.toResponseList(entities);
+    }
 }

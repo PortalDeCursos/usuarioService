@@ -39,6 +39,12 @@ public class professorController {
         return ResponseEntity.ok(professores);
     }
 
+    @GetMapping("/busca")
+    public ResponseEntity<List<professorResponseDTO>> buscarProfessoresPorNome(@RequestParam String nome) {
+        List<professorResponseDTO> professores = professorService.buscarProfessoresPorNome(nome);
+        return ResponseEntity.ok(professores);
+    }
+
 
 
 }
