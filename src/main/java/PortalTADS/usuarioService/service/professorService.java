@@ -15,6 +15,8 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class professorService {
@@ -37,4 +39,13 @@ public class professorService {
         return professorMapper.toResponse(entidadeSalva);
     }
 
+    public professorResponseDTO buscarProfessorPorId(Long id) {
+        professorEntity entity = professorRepository.findById(id).orElseThrow(() -> new RuntimeException("Professor não encontrado"));
+        return professorMapper.toResponse(entity);
+    }
+
+    public List<professorResponseDTO> listarProfessores() {
+        List<professorEntity> entities = professorRepository.findAll();
+        return professorMapper.toResponseList(entities);
+    }
 }
