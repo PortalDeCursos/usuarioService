@@ -10,6 +10,8 @@ import PortalTADS.usuarioService.repository.usuarioRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class usuarioService {
@@ -47,6 +49,19 @@ public class usuarioService {
         }
 
         repository.deleteById(id);
+    }
+
+    public List<usuarioResponseDTO> listarUsuarios() {
+        List<usuarioEntity> enitdades = repository.findAll();
+
+        List<usuarioResponseDTO> listaUsuarios = mapper.toResponseList(enitdades);
+        return listaUsuarios;
+    }
+
+
+    public List<usuarioResponseDTO> buscarUsuariosPorNome(String nome) {
+        List<usuarioEntity> enitdades = repository.findByNomeContainingIgnoreCase(nome);
+        return mapper.toResponseList(enitdades);
     }
 
     /////

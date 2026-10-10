@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
+
 //////
 @RestController
 @RequestMapping("/usuarios")
@@ -27,6 +29,25 @@ public class usuarioController {
     @GetMapping("/{id}")
     public ResponseEntity<usuarioResponseDTO> buscarUsuario(@PathVariable Long id) {
         usuarioResponseDTO response = service.buscarUsuario(id);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<usuarioResponseDTO>> listarUsuarios() {
+        List<usuarioResponseDTO> response = service.listarUsuarios();
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @GetMapping("/buscar")
+    public ResponseEntity<List<usuarioResponseDTO>> buscarUsuariosPorNome(
+            @RequestParam(required = false) String nome
+    ) {
+        List<usuarioResponseDTO> response;
+        if (nome != null) {
+            response = service.buscarUsuariosPorNome(nome);
+        } else {
+            response = service.listarUsuarios();
+        }
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 

@@ -6,6 +6,8 @@ import PortalTADS.usuarioService.model.professor;
 import PortalTADS.usuarioService.repository.entity.professorEntity;
 import org.mapstruct.Mapper;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface professorMapper {
 
@@ -14,4 +16,6 @@ public interface professorMapper {
     professorEntity toEntity(professor professorModel);
 
     professorResponseDTO toResponse(professorEntity entity);
+
+    List<professorResponseDTO> toResponseList(List<professorEntity> entities);
 }
