@@ -38,6 +38,12 @@ public class usuarioController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @GetMapping("/busca")
+    public ResponseEntity<List<usuarioResponseDTO>> buscarUsuariosPorNome(@RequestParam String nome) {
+        List<usuarioResponseDTO> response = service.buscarUsuariosPorNome(nome);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<usuarioResponseDTO> atualizarUsuario(@PathVariable Long id, @RequestBody usuarioRequestDTO record) {
         usuarioResponseDTO response = service.atualizarUsuario(id, record);

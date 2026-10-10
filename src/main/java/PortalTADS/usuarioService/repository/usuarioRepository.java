@@ -5,9 +5,13 @@ import PortalTADS.usuarioService.repository.entity.usuarioEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface usuarioRepository extends JpaRepository<usuarioEntity, Long> {
 
     boolean existsByUsername(String admin);
     boolean existsByTipoUsuario(roleUsuario admin);
+
+    List<usuarioEntity> findByNomeContainingIgnoreCase(String nome);
 }

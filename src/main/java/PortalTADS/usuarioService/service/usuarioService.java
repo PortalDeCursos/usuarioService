@@ -58,5 +58,11 @@ public class usuarioService {
         return listaUsuarios;
     }
 
+
+    public List<usuarioResponseDTO> buscarUsuariosPorNome(String nome) {
+        List<usuarioEntity> enitdades = repository.findByNomeContainingIgnoreCase(nome);
+        return mapper.toResponseList(enitdades);
+    }
+
     /////
 }
