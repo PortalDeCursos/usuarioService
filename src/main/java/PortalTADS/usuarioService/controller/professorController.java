@@ -1,5 +1,6 @@
 package PortalTADS.usuarioService.controller;
 
+import PortalTADS.usuarioService.enums.titulacaoProfessor;
 import PortalTADS.usuarioService.model.dto.professor.professorRequestDTO;
 import PortalTADS.usuarioService.model.dto.professor.professorResponseDTO;
 import PortalTADS.usuarioService.repository.professorRepository;
@@ -33,17 +34,23 @@ public class professorController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping
-    public ResponseEntity<List<professorResponseDTO>> buscarProfessores() {
-        List<professorResponseDTO> professores = professorService.listarProfessores();
+    @GetMapping("/buscar")
+    public ResponseEntity<List<professorResponseDTO>> buscarProfessores(
+            @RequestParam(required = false) String nome,
+            @RequestParam(required = false) titulacaoProfessor titulacao
+    ) {
+        List<professorResponseDTO> professores;
+        if (nome != null) {
+            professores = professorService.buscarProfessoresPorNome(nome);
+        } else if (titulacao != null) {
+            professores = professorService.buscarPorTitulacao(titulacao);
+        } else {
+            professores = professorService.listarProfessores();
+        }
         return ResponseEntity.ok(professores);
     }
 
-    @GetMapping("/busca")
-    public ResponseEntity<List<professorResponseDTO>> buscarProfessoresPorNome(@RequestParam String nome) {
-        List<professorResponseDTO> professores = professorService.buscarProfessoresPorNome(nome);
-        return ResponseEntity.ok(professores);
-    }
+
 
 
 

@@ -1,5 +1,6 @@
 package PortalTADS.usuarioService.repository;
 
+import PortalTADS.usuarioService.enums.titulacaoProfessor;
 import PortalTADS.usuarioService.repository.entity.professorEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -20,5 +21,7 @@ public interface professorRepository extends JpaRepository<professorEntity, Long
     List<professorEntity> buscarPorNomeUsuario(
             @Param("nome") String nome
     );
+
+    List<professorEntity> findByTitulacao(titulacaoProfessor titulacao);
 
 }

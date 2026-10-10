@@ -1,6 +1,7 @@
 package PortalTADS.usuarioService.service;
 
 import PortalTADS.usuarioService.enums.roleUsuario;
+import PortalTADS.usuarioService.enums.titulacaoProfessor;
 import PortalTADS.usuarioService.model.dto.professor.professorRequestDTO;
 import PortalTADS.usuarioService.model.dto.professor.professorResponseDTO;
 import PortalTADS.usuarioService.model.mapper.professorMapper;
@@ -52,5 +53,10 @@ public class professorService {
     public List<professorResponseDTO> buscarProfessoresPorNome(String nome) {
         List<professorEntity> entities = professorRepository.buscarPorNomeUsuario(nome);
         return professorMapper.toResponseList(entities);
+    }
+
+    public List<professorResponseDTO> buscarPorTitulacao(titulacaoProfessor titulacao) {
+        List<professorEntity> entitidades = professorRepository.findByTitulacao(titulacao);
+        return professorMapper.toResponseList(entitidades);
     }
 }
