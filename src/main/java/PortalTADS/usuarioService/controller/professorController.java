@@ -2,7 +2,6 @@ package PortalTADS.usuarioService.controller;
 
 import PortalTADS.usuarioService.model.dto.professor.professorRequestDTO;
 import PortalTADS.usuarioService.model.dto.professor.professorResponseDTO;
-import PortalTADS.usuarioService.repository.professorRepository;
 import PortalTADS.usuarioService.service.professorService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;

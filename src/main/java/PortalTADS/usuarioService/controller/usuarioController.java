@@ -18,7 +18,7 @@ public class usuarioController {
     private final usuarioService service;
 
     @PostMapping
-    public ResponseEntity salvarUsuario(@RequestBody usuarioRequestDTO record) {
+    public ResponseEntity<usuarioResponseDTO> salvarUsuario(@RequestBody usuarioRequestDTO record) {
         usuarioResponseDTO response = service.salvarUsuario(record);
         URI location = URI.create("/usuarios/" + response.getId());
         return ResponseEntity.status(HttpStatus.CREATED).location(location).body(response);
