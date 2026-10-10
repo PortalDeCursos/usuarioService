@@ -38,9 +38,16 @@ public class usuarioController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
-    @GetMapping("/busca")
-    public ResponseEntity<List<usuarioResponseDTO>> buscarUsuariosPorNome(@RequestParam String nome) {
-        List<usuarioResponseDTO> response = service.buscarUsuariosPorNome(nome);
+    @GetMapping("/buscar")
+    public ResponseEntity<List<usuarioResponseDTO>> buscarUsuariosPorNome(
+            @RequestParam(required = false) String nome
+    ) {
+        List<usuarioResponseDTO> response;
+        if (nome != null) {
+            response = service.buscarUsuariosPorNome(nome);
+        } else {
+            response = service.listarUsuarios();
+        }
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
