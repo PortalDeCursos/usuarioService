@@ -12,6 +12,8 @@ public interface usuarioRepository extends JpaRepository<usuarioEntity, Long> {
 
     boolean existsByUsername(String admin);
     boolean existsByTipoUsuario(roleUsuario admin);
+    boolean existsByEmail(String email);
+    boolean existsByEmailAndIdNot(String email, Long id);
 
     List<usuarioEntity> findByNomeContainingIgnoreCase(String nome);
 }

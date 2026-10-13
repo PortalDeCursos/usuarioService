@@ -1,6 +1,7 @@
 package PortalTADS.usuarioService.service;
 
 import PortalTADS.usuarioService.enums.roleUsuario;
+import PortalTADS.usuarioService.exception.EmailDuplicadoException;
 import PortalTADS.usuarioService.model.dto.usuario.usuarioRequestDTO;
 import PortalTADS.usuarioService.model.dto.usuario.usuarioResponseDTO;
 import PortalTADS.usuarioService.model.mapper.usuarioMapper;
@@ -20,6 +21,10 @@ public class usuarioService {
     private final usuarioRepository repository;
 
     public usuarioResponseDTO salvarUsuario(usuarioRequestDTO record) {
+        if (repository.existsByEmail(record.email())) {
+            throw new EmailDuplicadoException("Email já cadastrado.");
+        }
+
         usuario usuarioModel = mapper.toModel(record);
         usuarioModel.setTipoUsuario(roleUsuario.USER);
         usuarioEntity entity = mapper.toEntity(usuarioModel);
@@ -34,6 +39,11 @@ public class usuarioService {
 
     public usuarioResponseDTO atualizarUsuario(Long id, usuarioRequestDTO record) {
         usuarioEntity entity = repository.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+        if (repository.existsByEmailAndIdNot(record.email(), id)) {
+            throw new EmailDuplicadoException("Email já cadastrado.");
+        }
+
         usuario usuarioModel = mapper.toModel(record);
         usuarioModel.setId(entity.getId());
         usuarioModel.setTipoUsuario(roleUsuario.USER);

@@ -2,6 +2,7 @@ package PortalTADS.usuarioService.service;
 
 import PortalTADS.usuarioService.enums.roleUsuario;
 import PortalTADS.usuarioService.enums.titulacaoProfessor;
+import PortalTADS.usuarioService.exception.EmailDuplicadoException;
 import PortalTADS.usuarioService.model.dto.professor.professorRequestDTO;
 import PortalTADS.usuarioService.model.dto.professor.professorResponseDTO;
 import PortalTADS.usuarioService.model.mapper.professorMapper;
@@ -31,6 +32,11 @@ public class professorService {
     public professorResponseDTO criarProfessor(professorRequestDTO professorRequestDTO) {
         professor professorModel = professorMapper.toModel(professorRequestDTO);
         usuario usuarioModel = professorModel.getUsuario();
+
+        if (usuarioRepository.existsByEmail(usuarioModel.getEmail())) {
+            throw new EmailDuplicadoException("Email já cadastrado.");
+        }
+
         usuarioModel.setTipoUsuario(roleUsuario.PROFESSOR);
         usuarioEntity usuarioEntity = usuarioMapper.toEntity(usuarioModel);
         usuarioEntity usuarioSalvo = usuarioRepository.save(usuarioEntity);
@@ -66,6 +72,10 @@ public class professorService {
                 .orElseThrow(() -> new RuntimeException("Professor não encontrado"));
 
         usuarioEntity usuarioEntity = entity.getUsuario();
+        if (usuarioRepository.existsByEmailAndIdNot(professorRequestDTO.usuario().email(), usuarioEntity.getId())) {
+            throw new EmailDuplicadoException("Email já cadastrado.");
+        }
+
         usuarioEntity.setNome(professorRequestDTO.usuario().nome());
         usuarioEntity.setEmail(professorRequestDTO.usuario().email());
         usuarioEntity.setUsername(professorRequestDTO.usuario().username());
