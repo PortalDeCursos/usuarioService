@@ -2,6 +2,7 @@ package PortalTADS.usuarioService.service;
 
 import PortalTADS.usuarioService.enums.roleUsuario;
 import PortalTADS.usuarioService.enums.titulacaoProfessor;
+import PortalTADS.usuarioService.exception.EmailDuplicadoException;
 import PortalTADS.usuarioService.model.dto.professor.professorRequestDTO;
 import PortalTADS.usuarioService.model.dto.professor.professorResponseDTO;
 import PortalTADS.usuarioService.model.mapper.professorMapper;
@@ -31,6 +32,11 @@ public class professorService {
     public professorResponseDTO criarProfessor(professorRequestDTO professorRequestDTO) {
         professor professorModel = professorMapper.toModel(professorRequestDTO);
         usuario usuarioModel = professorModel.getUsuario();
+
+        if (usuarioRepository.existsByEmail(usuarioModel.getEmail())) {
+            throw new EmailDuplicadoException("Email já cadastrado.");
+        }
+
         usuarioModel.setTipoUsuario(roleUsuario.PROFESSOR);
         usuarioEntity usuarioEntity = usuarioMapper.toEntity(usuarioModel);
         usuarioEntity usuarioSalvo = usuarioRepository.save(usuarioEntity);
@@ -58,5 +64,42 @@ public class professorService {
     public List<professorResponseDTO> buscarPorTitulacao(titulacaoProfessor titulacao) {
         List<professorEntity> entitidades = professorRepository.findByTitulacao(titulacao);
         return professorMapper.toResponseList(entitidades);
+    }
+
+    @Transactional
+    public professorResponseDTO atualizarProfessor(Long id, professorRequestDTO professorRequestDTO) {
+        professorEntity entity = professorRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Professor não encontrado"));
+
+        usuarioEntity usuarioEntity = entity.getUsuario();
+        if (usuarioRepository.existsByEmailAndIdNot(professorRequestDTO.usuario().email(), usuarioEntity.getId())) {
+            throw new EmailDuplicadoException("Email já cadastrado.");
+        }
+
+        usuarioEntity.setNome(professorRequestDTO.usuario().nome());
+        usuarioEntity.setEmail(professorRequestDTO.usuario().email());
+        usuarioEntity.setUsername(professorRequestDTO.usuario().username());
+        usuarioEntity.setSenha(professorRequestDTO.usuario().senha());
+        usuarioEntity.setTipoUsuario(roleUsuario.PROFESSOR);
+
+        usuarioEntity usuarioAtualizado = usuarioRepository.save(usuarioEntity);
+
+        entity.setUsuario(usuarioAtualizado);
+        entity.setCursoId(professorRequestDTO.cursoId());
+        entity.setTitulacao(professorRequestDTO.titulacao());
+        entity.setDescricao(professorRequestDTO.descricao());
+
+        professorEntity professorAtualizado = professorRepository.save(entity);
+        return professorMapper.toResponse(professorAtualizado);
+    }
+
+    @Transactional
+    public void deletarProfessor(Long id) {
+        professorEntity entity = professorRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Professor não encontrado"));
+
+        Long usuarioId = entity.getUsuario().getId();
+        professorRepository.delete(entity);
+        usuarioRepository.deleteById(usuarioId);
     }
 }
