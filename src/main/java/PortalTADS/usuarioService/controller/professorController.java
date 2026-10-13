@@ -49,8 +49,15 @@ public class professorController {
         return ResponseEntity.ok(professores);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<professorResponseDTO> atualizarProfessor(@PathVariable Long id, @RequestBody professorRequestDTO request) {
+        professorResponseDTO response = professorService.atualizarProfessor(id, request);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 
-
-
-
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletarProfessor(@PathVariable Long id) {
+        professorService.deletarProfessor(id);
+        return ResponseEntity.noContent().build();
+    }
 }

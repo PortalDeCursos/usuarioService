@@ -59,4 +59,37 @@ public class professorService {
         List<professorEntity> entitidades = professorRepository.findByTitulacao(titulacao);
         return professorMapper.toResponseList(entitidades);
     }
+
+    @Transactional
+    public professorResponseDTO atualizarProfessor(Long id, professorRequestDTO professorRequestDTO) {
+        professorEntity entity = professorRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Professor não encontrado"));
+
+        usuarioEntity usuarioEntity = entity.getUsuario();
+        usuarioEntity.setNome(professorRequestDTO.usuario().nome());
+        usuarioEntity.setEmail(professorRequestDTO.usuario().email());
+        usuarioEntity.setUsername(professorRequestDTO.usuario().username());
+        usuarioEntity.setSenha(professorRequestDTO.usuario().senha());
+        usuarioEntity.setTipoUsuario(roleUsuario.PROFESSOR);
+
+        usuarioEntity usuarioAtualizado = usuarioRepository.save(usuarioEntity);
+
+        entity.setUsuario(usuarioAtualizado);
+        entity.setCursoId(professorRequestDTO.cursoId());
+        entity.setTitulacao(professorRequestDTO.titulacao());
+        entity.setDescricao(professorRequestDTO.descricao());
+
+        professorEntity professorAtualizado = professorRepository.save(entity);
+        return professorMapper.toResponse(professorAtualizado);
+    }
+
+    @Transactional
+    public void deletarProfessor(Long id) {
+        professorEntity entity = professorRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Professor não encontrado"));
+
+        Long usuarioId = entity.getUsuario().getId();
+        professorRepository.delete(entity);
+        usuarioRepository.deleteById(usuarioId);
+    }
 }
