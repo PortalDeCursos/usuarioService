@@ -50,11 +50,5 @@ public class GlobalExceptionHandler {
     }
 
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ProblemDetail> handleRuntimeException(RuntimeException ex) {
-        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
-        problem.setTitle("Erro de requisição");
-        problem.setProperty("timestamp", LocalDateTime.now());
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(problem);
-    }
+
 }

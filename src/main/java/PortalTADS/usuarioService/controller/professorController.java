@@ -4,6 +4,7 @@ import PortalTADS.usuarioService.enums.titulacaoProfessor;
 import PortalTADS.usuarioService.model.dto.professor.professorRequestDTO;
 import PortalTADS.usuarioService.model.dto.professor.professorResponseDTO;
 import PortalTADS.usuarioService.service.professorService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ public class professorController {
     private final professorService professorService;
 
     @PostMapping
-    public ResponseEntity<professorResponseDTO> criarProfessor(@RequestBody professorRequestDTO request) {
+    public ResponseEntity<professorResponseDTO> criarProfessor(@RequestBody @Valid professorRequestDTO request) {
 
         professorResponseDTO  response = professorService.criarProfessor(request);
         URI localizacao = URI.create("/professores/" + response.getId());
@@ -50,7 +51,7 @@ public class professorController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<professorResponseDTO> atualizarProfessor(@PathVariable Long id, @RequestBody professorRequestDTO request) {
+    public ResponseEntity<professorResponseDTO> atualizarProfessor(@PathVariable Long id, @RequestBody @Valid professorRequestDTO request) {
         professorResponseDTO response = professorService.atualizarProfessor(id, request);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

@@ -3,6 +3,7 @@ package PortalTADS.usuarioService.controller;
 import PortalTADS.usuarioService.model.dto.usuario.usuarioRequestDTO;
 import PortalTADS.usuarioService.model.dto.usuario.usuarioResponseDTO;
 import PortalTADS.usuarioService.service.usuarioService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ public class usuarioController {
     private final usuarioService service;
 
     @PostMapping
-    public ResponseEntity<usuarioResponseDTO> salvarUsuario(@RequestBody usuarioRequestDTO record) {
+    public ResponseEntity<usuarioResponseDTO> salvarUsuario(@RequestBody @Valid usuarioRequestDTO record) {
         usuarioResponseDTO response = service.salvarUsuario(record);
         URI location = URI.create("/usuarios/" + response.getId());
         return ResponseEntity.status(HttpStatus.CREATED).location(location).body(response);
@@ -52,7 +53,7 @@ public class usuarioController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<usuarioResponseDTO> atualizarUsuario(@PathVariable Long id, @RequestBody usuarioRequestDTO record) {
+    public ResponseEntity<usuarioResponseDTO> atualizarUsuario(@PathVariable Long id, @RequestBody @Valid usuarioRequestDTO record) {
         usuarioResponseDTO response = service.atualizarUsuario(id, record);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
