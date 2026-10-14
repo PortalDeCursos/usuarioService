@@ -31,7 +31,7 @@ public class filtroJwtAutenticacao extends OncePerRequestFilter {
 
         String autorizacaoHeader = request.getHeader("Authorization");
 
-        if (!StringUtils.hasText(autorizacaoHeader) && !autorizacaoHeader.startsWith("Bearer ")) {
+        if (!StringUtils.hasText(autorizacaoHeader) || !autorizacaoHeader.startsWith("Bearer ")) {
             String token = autorizacaoHeader.substring(7);
 
             if (tokenProvider.validarToken(token )) {

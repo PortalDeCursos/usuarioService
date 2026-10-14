@@ -5,6 +5,8 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -34,7 +36,7 @@ public class ConfiguracaoSeguranca {
                         }))
                 .authorizeHttpRequests(auth ->  auth
 
-                    .requestMatchers("/usuario/**").permitAll()
+                    .requestMatchers("/**").permitAll()
                     .anyRequest().authenticated()
                 )
                 .addFilterBefore(filtroJwtAutenticacao, UsernamePasswordAuthenticationFilter.class)
@@ -45,5 +47,10 @@ public class ConfiguracaoSeguranca {
     @Bean
     public PasswordEncoder passwordEncoder(){
         return  new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) {
+        return configuration.getAuthenticationManager();
     }
 }
