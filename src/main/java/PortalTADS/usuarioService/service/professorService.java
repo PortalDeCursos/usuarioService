@@ -15,6 +15,7 @@ import PortalTADS.usuarioService.repository.professorRepository;
 import PortalTADS.usuarioService.repository.usuarioRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,6 +29,8 @@ public class professorService {
     private final professorMapper professorMapper;
     private final usuarioMapper usuarioMapper;
 
+    private final PasswordEncoder passwordEncoder;
+
     @Transactional
     public professorResponseDTO criarProfessor(professorRequestDTO professorRequestDTO) {
         professor professorModel = professorMapper.toModel(professorRequestDTO);
@@ -38,6 +41,7 @@ public class professorService {
         }
 
         usuarioModel.setTipoUsuario(roleUsuario.PROFESSOR);
+        usuarioModel.setSenha(passwordEncoder.encode(usuarioModel.getSenha()));
         usuarioEntity usuarioEntity = usuarioMapper.toEntity(usuarioModel);
         usuarioEntity usuarioSalvo = usuarioRepository.save(usuarioEntity);
         professorModel.setUsuario(usuarioMapper.toModel(usuarioSalvo));

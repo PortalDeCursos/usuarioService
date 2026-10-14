@@ -9,6 +9,7 @@ import PortalTADS.usuarioService.model.usuario;
 import PortalTADS.usuarioService.repository.entity.usuarioEntity;
 import PortalTADS.usuarioService.repository.usuarioRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class usuarioService {
 
     private final usuarioMapper mapper;
     private final usuarioRepository repository;
+    private final PasswordEncoder passwordEncoder;
 
     public usuarioResponseDTO salvarUsuario(usuarioRequestDTO record) {
         if (repository.existsByEmail(record.email())) {
@@ -27,6 +29,7 @@ public class usuarioService {
 
         usuario usuarioModel = mapper.toModel(record);
         usuarioModel.setTipoUsuario(roleUsuario.USER);
+        usuarioModel.setSenha(passwordEncoder.encode(usuarioModel.getSenha()));
         usuarioEntity entity = mapper.toEntity(usuarioModel);
         repository.save(entity);
         return mapper.toResponse(entity);
