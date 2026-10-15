@@ -31,18 +31,22 @@ public class filtroJwtAutenticacao extends OncePerRequestFilter {
 
         String autorizacaoHeader = request.getHeader("Authorization");
 
-        if (!StringUtils.hasText(autorizacaoHeader) || !autorizacaoHeader.startsWith("Bearer ")) {
-            String token = autorizacaoHeader.substring(7);
-
-            if (tokenProvider.validarToken(token )) {
-                String username = tokenProvider.getUsername(token);
-                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities()
-                );
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-            }
+        if (!StringUtils.hasText(autorizacaoHeader)
+                || !autorizacaoHeader.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response);
+            return;
         }
+        String token = autorizacaoHeader.substring(7);
+
+        if (tokenProvider.validarToken(token )) {
+            String username = tokenProvider.getUsername(token);
+            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                    userDetails, null, userDetails.getAuthorities()
+            );
+            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        }
+
 
         filterChain.doFilter(request, response);
     }
