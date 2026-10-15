@@ -5,7 +5,6 @@ import PortalTADS.usuarioService.repository.entity.usuarioEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -20,4 +19,6 @@ public interface usuarioRepository extends JpaRepository<usuarioEntity, Long> {
     List<usuarioEntity> findByNomeContainingIgnoreCase(String nome);
 
     Optional<UserDetails> findByUsername(String username);
+
+    Optional<usuarioEntity> findByEmail(String username);
 }
