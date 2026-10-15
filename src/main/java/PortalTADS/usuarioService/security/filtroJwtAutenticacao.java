@@ -1,4 +1,4 @@
-package PortalTADS.usuarioService.config;
+package PortalTADS.usuarioService.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

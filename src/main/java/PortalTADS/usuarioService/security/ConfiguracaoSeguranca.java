@@ -1,4 +1,4 @@
-package PortalTADS.usuarioService.config;
+package PortalTADS.usuarioService.security;
 
 import lombok.AllArgsConstructor;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -36,7 +36,8 @@ public class ConfiguracaoSeguranca {
                         }))
                 .authorizeHttpRequests(auth ->  auth
 
-                    .requestMatchers("/**").permitAll()
+                    .requestMatchers( "/usuarios").permitAll()
+                        .requestMatchers("/auth/**").permitAll()
                     .anyRequest().authenticated()
                 )
                 .addFilterBefore(filtroJwtAutenticacao, UsernamePasswordAuthenticationFilter.class)

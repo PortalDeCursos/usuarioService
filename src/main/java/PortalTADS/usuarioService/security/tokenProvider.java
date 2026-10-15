@@ -1,4 +1,4 @@
-package PortalTADS.usuarioService.config;
+package PortalTADS.usuarioService.security;
 
 
 import io.jsonwebtoken.Claims;
@@ -65,5 +65,9 @@ public class tokenProvider {
 
     public String getUsername(String token) {
         return getClaims(token).getSubject();
+    }
+
+    public long getExpiracao() {
+        return tempoExpiracao;
     }
 }

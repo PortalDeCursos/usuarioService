@@ -1,7 +1,7 @@
-package PortalTADS.usuarioService.model;
+package PortalTADS.usuarioService.security;
 
+import PortalTADS.usuarioService.model.usuario;
 import lombok.AllArgsConstructor;
-import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

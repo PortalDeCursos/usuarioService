@@ -30,6 +30,8 @@ public class usuarioService {
         usuario usuarioModel = mapper.toModel(record);
         usuarioModel.setTipoUsuario(roleUsuario.USER);
         usuarioModel.setSenha(passwordEncoder.encode(usuarioModel.getSenha()));
+
+
         usuarioEntity entity = mapper.toEntity(usuarioModel);
         repository.save(entity);
         return mapper.toResponse(entity);
