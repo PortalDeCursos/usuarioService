@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -34,6 +35,7 @@ public class usuarioController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<usuarioResponseDTO>> listarUsuarios() {
         List<usuarioResponseDTO> response = service.listarUsuarios();
         return ResponseEntity.status(HttpStatus.OK).body(response);
