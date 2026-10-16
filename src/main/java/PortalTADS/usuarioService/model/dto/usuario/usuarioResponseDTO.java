@@ -21,9 +21,6 @@ public class usuarioResponseDTO {
     @Schema(description = "E-mail do usuário", example = "joao.silva@email.com")
     private String email;
 
-    @Schema(description = "Senha do usuário (hash)", example = "$2a$10$...")
-    private String senha;
-
     @Schema(description = "Nome de usuário", example = "joao.silva")
     private String username;
 
