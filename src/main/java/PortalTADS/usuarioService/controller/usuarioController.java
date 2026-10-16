@@ -92,6 +92,7 @@ public class usuarioController {
             )
     })
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<usuarioResponseDTO> buscarUsuario(
             @Parameter(description = "ID único do usuário", required = true, example = "1")
             @PathVariable Long id
@@ -153,6 +154,7 @@ public class usuarioController {
             )
     })
     @GetMapping("/buscar")
+    @PreAuthorize( "hasRole('ADMIN')")
     public ResponseEntity<List<usuarioResponseDTO>> buscarUsuariosPorNome(
             @Parameter(description = "Termo para buscar no nome do usuário (parcial, case-insensitive)", example = "João")
             @RequestParam(required = false) String nome
@@ -198,6 +200,7 @@ public class usuarioController {
             )
     })
     @PutMapping("/{id}")
+    @PreAuthorize( "hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<usuarioResponseDTO> atualizarUsuario(
             @Parameter(description = "ID único do usuário a ser atualizado", required = true, example = "1")
             @PathVariable Long id,
@@ -229,6 +232,7 @@ public class usuarioController {
             )
     })
     @DeleteMapping("/{id}")
+    @PreAuthorize( "hasRole('USER') or hasRole('ADMIN')")
     public ResponseEntity<Void> deletarUsuario(
             @Parameter(description = "ID único do usuário a ser removido", required = true, example = "1")
             @PathVariable Long id
