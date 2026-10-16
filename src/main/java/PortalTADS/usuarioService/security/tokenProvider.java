@@ -1,12 +1,12 @@
 package PortalTADS.usuarioService.security;
 
 
+import PortalTADS.usuarioService.enums.roleUsuario;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -22,16 +22,17 @@ public class tokenProvider {
     private String segredo;
 
     public String gerarToken(Authentication authentication) {
-        UserDetails usuario = (UserDetails) authentication.getPrincipal();
-        return buildToken(usuario.getUsername());
+        userDetails usuario = (userDetails) authentication.getPrincipal();
+        return buildToken(usuario.getUsername(), usuario.getRole());
     }
 
-    private String buildToken(String username) {
+    private String buildToken(String username, String role) {
         Date agora = new Date();
         Date expiracao = new Date(agora.getTime() + tempoExpiracao);
 
         return Jwts.builder()
                 .subject(username)
+                .claim("role", role)
                 .setIssuedAt(agora)
                 .setExpiration(expiracao)
                 .signWith(getSegredoAssinado())

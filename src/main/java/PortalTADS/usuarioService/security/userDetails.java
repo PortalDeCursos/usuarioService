@@ -28,6 +28,11 @@ public class userDetails implements UserDetails {
         return usuario.getSenha();
     }
 
+
+    public String getRole() {
+        return usuario.getTipoUsuario().name();
+    }
+
     @Override
     public String getUsername() {
         return usuario.getEmail();
