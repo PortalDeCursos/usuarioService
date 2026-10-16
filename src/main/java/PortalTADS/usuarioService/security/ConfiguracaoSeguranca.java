@@ -41,7 +41,14 @@ public class ConfiguracaoSeguranca {
                         )
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll()
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/swagger-ui.html",
+                                "/v3/api-docs/**"
+                        ).permitAll()
+                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/usuarios").permitAll()
+                        .anyRequest().authenticated()
                 )
                 .addFilterBefore(
                         filtroJwtAutenticacao,
