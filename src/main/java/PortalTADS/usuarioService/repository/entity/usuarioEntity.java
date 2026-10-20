@@ -32,15 +32,12 @@ public class usuarioEntity {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false, unique = true)
-    private String username;
-
     @Column(nullable = false)
     private String senha;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "tipo_usuario", nullable = false)
-    private roleUsuario tipoUsuario;
+    @Column(name = "role_usuario", nullable = false)
+    private roleUsuario role_usuario;
 
     @CreationTimestamp
     private LocalDateTime criado_em;
