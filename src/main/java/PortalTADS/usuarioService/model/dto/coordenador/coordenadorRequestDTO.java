@@ -1,5 +1,6 @@
 package PortalTADS.usuarioService.model.dto.coordenador;
 
+import PortalTADS.usuarioService.model.dto.professor.professorRequestDTO;
 import PortalTADS.usuarioService.model.dto.usuario.usuarioRequestDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
@@ -15,7 +16,7 @@ public record coordenadorRequestDTO(
                 description = "Dados do usuário vinculado ao coordenador",
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
-        usuarioRequestDTO usuario,
+        professorRequestDTO professor,
 
         @NotNull(message = "O ID do curso é obrigatório")
         @Positive(message = "O ID do curso deve ser positivo")

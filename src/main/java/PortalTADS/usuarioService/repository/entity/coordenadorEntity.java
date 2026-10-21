@@ -19,8 +19,8 @@ public class coordenadorEntity  {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "usuario_id", nullable = false)
-    private usuarioEntity usuario;
+    @JoinColumn(name = "professor_id", nullable = false)
+    private professorEntity professor;
 
     @Column(name = "curso_id")
     private Long cursoId;

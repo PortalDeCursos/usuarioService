@@ -30,7 +30,7 @@ CREATE TABLE professor (
 -- Tabela Coordenador
 CREATE TABLE coordenador (
          id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-         usuario_id BIGINT NOT NULL,
+         professor_id BIGINT NOT NULL,
          curso_id BIGINT NOT NULL,
-         CONSTRAINT fk_coordenador_usuario FOREIGN KEY (usuario_id) REFERENCES usuario (id) ON DELETE CASCADE
+         CONSTRAINT fk_coordenador_professor FOREIGN KEY (professor_id) REFERENCES professor (id) ON DELETE CASCADE
 );

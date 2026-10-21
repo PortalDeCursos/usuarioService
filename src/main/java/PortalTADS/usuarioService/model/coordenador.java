@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 public class coordenador {
 
     private Long id;
-    private usuario usuario;
+    private professor professor;
     private Long cursoId;
 }
