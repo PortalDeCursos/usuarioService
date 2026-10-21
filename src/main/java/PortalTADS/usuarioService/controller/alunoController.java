@@ -79,7 +79,7 @@ public class alunoController {
             @ApiResponse(responseCode = "401", description = "Não autenticado — token JWT ausente ou inválido", content = @Content)
     })
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('ALUNO')")
+    @PreAuthorize("hasAnyRole('ALUNO', 'COORDENADOR', 'PROFESSOR', 'ADMIN')")
     public ResponseEntity<alunoResponseDTO> buscarAlunoPorId(
             @Parameter(description = "ID único do aluno", required = true, example = "1")
             @PathVariable Long id
@@ -93,7 +93,7 @@ public class alunoController {
             @ApiResponse(responseCode = "401", description = "Não autenticado — token JWT ausente ou inválido", content = @Content)
     })
     @GetMapping("/buscar")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('ALUNO')")
+    @PreAuthorize("hasAnyRole('ALUNO', 'COORDENADOR', 'PROFESSOR', 'ADMIN')")
     public ResponseEntity<List<alunoResponseDTO>> buscarAlunos(
             @Parameter(description = "Termo para buscar no nome do aluno", example = "Maria")
             @RequestParam(required = false) String nome,
@@ -119,7 +119,7 @@ public class alunoController {
             @ApiResponse(responseCode = "401", description = "Não autenticado — token JWT ausente ou inválido", content = @Content)
     })
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('ALUNO')")
+    @PreAuthorize("hasAnyRole('ALUNO', 'ADMIN')")
     public ResponseEntity<alunoResponseDTO> atualizarAluno(
             @Parameter(description = "ID único do aluno a ser atualizado", required = true, example = "1")
             @PathVariable Long id,

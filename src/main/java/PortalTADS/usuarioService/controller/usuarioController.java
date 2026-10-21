@@ -92,7 +92,7 @@ public class usuarioController {
             )
     })
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<usuarioResponseDTO> buscarUsuario(
             @Parameter(description = "ID único do usuário", required = true, example = "1")
             @PathVariable Long id
@@ -232,7 +232,7 @@ public class usuarioController {
             )
     })
     @DeleteMapping("/{id}")
-    @PreAuthorize( "hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize( " hasRole('ADMIN')")
     public ResponseEntity<Void> deletarUsuario(
             @Parameter(description = "ID único do usuário a ser removido", required = true, example = "1")
             @PathVariable Long id

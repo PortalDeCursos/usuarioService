@@ -14,6 +14,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -60,6 +61,7 @@ public class autenticacaoController {
     })
     @SecurityRequirements
     @PostMapping("/login")
+    @PreAuthorize("permitAll()")
     public ResponseEntity<loginResponseDTO> login(@RequestBody @Valid loginRequestDTO loginRequestDTO) throws Exception {
         loginResponseDTO response = autenticacaoService.login(loginRequestDTO);
         return ResponseEntity.ok(response);

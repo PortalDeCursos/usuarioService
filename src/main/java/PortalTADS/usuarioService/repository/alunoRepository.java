@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface alunoRepository extends JpaRepository<alunoEntity, Long> {
@@ -20,4 +21,7 @@ public interface alunoRepository extends JpaRepository<alunoEntity, Long> {
     List<alunoEntity> buscarPorNomeUsuario(@Param("nome") String nome);
 
     List<alunoEntity> findByCursoId(Long cursoId);
+
+
+    Optional<alunoEntity> findById(Long id);
 }

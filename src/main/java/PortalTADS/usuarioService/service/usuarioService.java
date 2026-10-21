@@ -28,7 +28,7 @@ public class usuarioService {
         }
 
         usuario usuarioModel = mapper.toModel(record);
-        usuarioModel.setTipoUsuario(roleUsuario.ALUNO);
+        usuarioModel.setTipoUsuario(roleUsuario.ADMIN);
         usuarioModel.setSenha(passwordEncoder.encode(usuarioModel.getSenha()));
 
 
@@ -51,7 +51,7 @@ public class usuarioService {
 
         usuario usuarioModel = mapper.toModel(record);
         usuarioModel.setId(entity.getId());
-        usuarioModel.setTipoUsuario(roleUsuario.ALUNO);
+        usuarioModel.setTipoUsuario(roleUsuario.ADMIN);
         usuarioEntity updatedEntity = mapper.toEntity(usuarioModel);
         repository.save(updatedEntity);
         return mapper.toResponse(updatedEntity);
