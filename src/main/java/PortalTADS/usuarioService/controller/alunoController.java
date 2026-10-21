@@ -65,6 +65,7 @@ public class alunoController {
     })
 
     @PostMapping
+    @PreAuthorize("permitAll()")
     public ResponseEntity<alunoResponseDTO> criarAluno(@RequestBody @Valid alunoRequestDTO request) {
         alunoResponseDTO response = alunoService.criarAluno(request);
         URI location = URI.create("/alunos/" + response.getId());
