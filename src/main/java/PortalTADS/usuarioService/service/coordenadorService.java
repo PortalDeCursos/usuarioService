@@ -1,20 +1,15 @@
 package PortalTADS.usuarioService.service;
 
-import PortalTADS.usuarioService.enums.roleUsuario;
-import PortalTADS.usuarioService.exception.EmailDuplicadoException;
 import PortalTADS.usuarioService.model.coordenador;
 import PortalTADS.usuarioService.model.dto.coordenador.coordenadorRequestDTO;
 import PortalTADS.usuarioService.model.dto.coordenador.coordenadorResponseDTO;
 import PortalTADS.usuarioService.model.mapper.coordenadorMapper;
-import PortalTADS.usuarioService.model.mapper.usuarioMapper;
-import PortalTADS.usuarioService.model.usuario;
 import PortalTADS.usuarioService.repository.coordenadorRepository;
 import PortalTADS.usuarioService.repository.entity.coordenadorEntity;
-import PortalTADS.usuarioService.repository.entity.usuarioEntity;
-import PortalTADS.usuarioService.repository.usuarioRepository;
+import PortalTADS.usuarioService.repository.entity.professorEntity;
+import PortalTADS.usuarioService.repository.professorRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,28 +19,25 @@ import java.util.List;
 public class coordenadorService {
 
     private final coordenadorRepository coordenadorRepository;
-    private final usuarioRepository usuarioRepository;
+    private final professorRepository professorRepository;
     private final coordenadorMapper coordenadorMapper;
-    private final usuarioMapper usuarioMapper;
-    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public coordenadorResponseDTO criarCoordenador(coordenadorRequestDTO request) {
-        coordenador coordenadorModel = coordenadorMapper.toModel(request);
-        usuario usuarioModel = coordenadorModel.getUsuario();
 
-        if (usuarioRepository.existsByEmail(usuarioModel.getEmail())) {
-            throw new EmailDuplicadoException("Email já cadastrado.");
+
+
+        if (coordenadorRepository.existsByProfessorId(request.professorId())) {
+            throw new RuntimeException("Professor já está cadastrado como coordenador");
         }
 
-        usuarioModel.setTipoUsuario(roleUsuario.COORDENADOR);
-        usuarioModel.setSenha(passwordEncoder.encode(usuarioModel.getSenha()));
+        coordenador coordenadorModel = coordenadorMapper.toModel(request);
 
-        usuarioEntity usuarioEntity = usuarioMapper.toEntity(usuarioModel);
-        usuarioEntity usuarioSalvo = usuarioRepository.save(usuarioEntity);
-        coordenadorModel.setUsuario(usuarioMapper.toModel(usuarioSalvo));
+        professorEntity professor = professorRepository.findById(request.professorId())
+                .orElseThrow(() -> new RuntimeException("Professor não encontrado"));
 
         coordenadorEntity entity = coordenadorMapper.toEntity(coordenadorModel);
+        entity.setProfessor(professor);
         coordenadorEntity salvo = coordenadorRepository.save(entity);
         return coordenadorMapper.toResponse(salvo);
     }
@@ -73,19 +65,14 @@ public class coordenadorService {
         coordenadorEntity entity = coordenadorRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Coordenador não encontrado"));
 
-        usuarioEntity usuarioEntity = entity.getUsuario();
-        if (usuarioRepository.existsByEmailAndIdNot(request.usuario().email(), usuarioEntity.getId())) {
-            throw new EmailDuplicadoException("Email já cadastrado.");
+        if (coordenadorRepository.existsByProfessorIdAndIdNot(request.professorId(), id)) {
+            throw new RuntimeException("Professor já está cadastrado como coordenador");
         }
 
-        usuarioEntity.setNome(request.usuario().nome());
-        usuarioEntity.setEmail(request.usuario().email());
-        usuarioEntity.setSenha(passwordEncoder.encode(request.usuario().senha()));
-        usuarioEntity.setTipoUsuario(roleUsuario.COORDENADOR);
+        professorEntity professor = professorRepository.findById(request.professorId())
+                .orElseThrow(() -> new RuntimeException("Professor não encontrado"));
 
-        usuarioEntity usuarioAtualizado = usuarioRepository.save(usuarioEntity);
-
-        entity.setUsuario(usuarioAtualizado);
+        entity.setProfessor(professor);
         entity.setCursoId(request.cursoId());
 
         coordenadorEntity atualizado = coordenadorRepository.save(entity);
@@ -97,8 +84,6 @@ public class coordenadorService {
         coordenadorEntity entity = coordenadorRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Coordenador não encontrado"));
 
-        Long usuarioId = entity.getUsuario().getId();
         coordenadorRepository.delete(entity);
-        usuarioRepository.deleteById(usuarioId);
     }
 }

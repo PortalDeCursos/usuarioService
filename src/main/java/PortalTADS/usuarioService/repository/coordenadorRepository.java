@@ -14,10 +14,15 @@ public interface coordenadorRepository extends JpaRepository<coordenadorEntity, 
     @Query("""
         SELECT c
         FROM coordenadorEntity c
-        JOIN c.usuario u
+        JOIN c.professor p
+        JOIN p.usuario u
         WHERE LOWER(u.nome) LIKE LOWER(CONCAT('%', :nome, '%'))
         """)
     List<coordenadorEntity> buscarPorNomeUsuario(@Param("nome") String nome);
 
     List<coordenadorEntity> findByCursoId(Long cursoId);
+
+    boolean existsByProfessorId(Long professorId);
+
+    boolean existsByProfessorIdAndIdNot(Long professorId, Long id);
 }

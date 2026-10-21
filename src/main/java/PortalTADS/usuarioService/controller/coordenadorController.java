@@ -33,7 +33,7 @@ public class coordenadorController {
 
     @Operation(
             summary = "Cadastrar novo coordenador",
-            description = "Cria um novo coordenador no sistema, associando-o a um usuário e a um curso."
+            description = "Cria um novo coordenador no sistema, associando-o a um professor já cadastrado e a um curso."
     )
     @ApiResponses({
             @ApiResponse(
@@ -59,7 +59,7 @@ public class coordenadorController {
             ),
             @ApiResponse(
                     responseCode = "409",
-                    description = "Conflito — e-mail do coordenador já cadastrado no sistema",
+                    description = "Conflito — professor já está cadastrado como coordenador",
                     content = @Content(schema = @Schema(implementation = ProblemDetail.class))
             )
     })
@@ -110,7 +110,7 @@ public class coordenadorController {
         return ResponseEntity.ok(coordenadores);
     }
 
-    @Operation(summary = "Atualizar coordenador", description = "Atualiza os dados de um coordenador existente.")
+    @Operation(summary = "Atualizar coordenador", description = "Atualiza o professor vinculado e/ou curso de um coordenador existente.")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Coordenador atualizado com sucesso", content = @Content(schema = @Schema(implementation = coordenadorResponseDTO.class))),
             @ApiResponse(responseCode = "400", description = "Dados inválidos — campos obrigatórios ausentes ou com formato incorreto", content = @Content(schema = @Schema(implementation = ProblemDetail.class))),
