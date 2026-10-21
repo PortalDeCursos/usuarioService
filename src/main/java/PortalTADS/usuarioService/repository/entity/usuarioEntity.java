@@ -37,7 +37,7 @@ public class usuarioEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role_usuario", nullable = false)
-    private roleUsuario role_usuario;
+    private roleUsuario tipoUsuario;
 
     @CreationTimestamp
     private LocalDateTime criado_em;

@@ -21,7 +21,6 @@ public class usuarioResponseDTO {
     @Schema(description = "E-mail do usuário", example = "joao.silva@email.com")
     private String email;
 
-
     @Schema(description = "Papel/perfil do usuário no sistema", example = "USER")
-    private roleUsuario roleUsuario;
+    private roleUsuario tipoUsuario;
 }
