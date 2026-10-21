@@ -19,7 +19,7 @@ public class admSeeder {
     CommandLineRunner criarAdminInicial(usuarioRepository usuarioRepository) {
         return args -> {
 
-            if (usuarioRepository.existsByTipoUsuario(roleUsuario.ADMIN)) {
+            if (usuarioRepository.existsByEmail("admin@portaltads.com")) {
                 return;
             }
 

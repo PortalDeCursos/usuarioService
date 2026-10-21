@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -26,14 +27,19 @@ import java.util.List;
 @RestController
 @RequestMapping("/alunos")
 @AllArgsConstructor
-@Tag(name = "Alunos", description = "Gerenciamento de alunos vinculados a cursos")
+@Tag(name = "Alunos", description = "Endpoints para gerenciamento de alunos vinculados a cursos (CRUD e buscas)")
 public class alunoController {
 
     private final alunoService alunoService;
 
     @Operation(
             summary = "Cadastrar novo aluno",
-            description = "Cria um novo aluno no sistema, associando-o a um usuário e a um curso."
+            description = """
+                    Cria um novo registro de aluno no sistema, associando-o a um usuário e a um curso.
+                    
+                    Este endpoint é **público** e permite o auto-cadastro ou registro de discentes.
+                    O usuário associado receberá as credenciais e vínculo com o respectivo ID do curso informado.
+                    """
     )
     @ApiResponses({
             @ApiResponse(
@@ -48,22 +54,12 @@ public class alunoController {
                     content = @Content(schema = @Schema(implementation = ProblemDetail.class))
             ),
             @ApiResponse(
-                    responseCode = "401",
-                    description = "Não autenticado — token JWT ausente ou inválido",
-                    content = @Content
-            ),
-            @ApiResponse(
-                    responseCode = "403",
-                    description = "Acesso negado — usuário não possui papel ADMIN",
-                    content = @Content
-            ),
-            @ApiResponse(
                     responseCode = "409",
                     description = "Conflito — e-mail do aluno já cadastrado no sistema",
                     content = @Content(schema = @Schema(implementation = ProblemDetail.class))
             )
     })
-
+    @SecurityRequirements
     @PostMapping
     @PreAuthorize("permitAll()")
     public ResponseEntity<alunoResponseDTO> criarAluno(@RequestBody @Valid alunoRequestDTO request) {
@@ -72,32 +68,80 @@ public class alunoController {
         return ResponseEntity.status(HttpStatus.CREATED).location(location).body(response);
     }
 
-    @Operation(summary = "Buscar aluno por ID", description = "Retorna os dados completos de um aluno específico.")
+    @Operation(
+            summary = "Buscar aluno por ID",
+            description = """
+                    Retorna os dados cadastrais completos de um aluno específico pelo seu ID.
+                    
+                    **Permissões requeridas:** Papéis `ALUNO`, `COORDENADOR`, `PROFESSOR` ou `ADMIN`.
+                    """
+    )
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Aluno encontrado", content = @Content(schema = @Schema(implementation = alunoResponseDTO.class))),
-            @ApiResponse(responseCode = "404", description = "Aluno não encontrado", content = @Content(schema = @Schema(implementation = ProblemDetail.class))),
-            @ApiResponse(responseCode = "401", description = "Não autenticado — token JWT ausente ou inválido", content = @Content)
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Aluno encontrado com sucesso",
+                    content = @Content(schema = @Schema(implementation = alunoResponseDTO.class))
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Não autenticado — token JWT ausente ou inválido",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Acesso negado — usuário não possui permissão para consultar este recurso",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Aluno não encontrado para o ID informado",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))
+            )
     })
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('ALUNO', 'COORDENADOR', 'PROFESSOR', 'ADMIN')")
     public ResponseEntity<alunoResponseDTO> buscarAlunoPorId(
-            @Parameter(description = "ID único do aluno", required = true, example = "1")
+            @Parameter(description = "ID numérico único do aluno", required = true, example = "1")
             @PathVariable Long id
     ) {
         return ResponseEntity.ok(alunoService.buscarAlunoPorId(id));
     }
 
-    @Operation(summary = "Buscar alunos", description = "Busca alunos por nome, por curso ou lista todos.")
+    @Operation(
+            summary = "Buscar ou listar alunos",
+            description = """
+                    Permite listar alunos ou filtrá-los dinamicamente por nome e/ou ID do curso.
+                    
+                    - Se `nome` for informado, filtra alunos com correspondência parcial no nome.
+                    - Se `cursoId` for informado (e nome ausente), filtra discentes matriculados naquele curso.
+                    - Se nenhum parâmetro for informado, lista todos os alunos cadastrados.
+                    
+                    **Permissões requeridas:** Papéis `ALUNO`, `COORDENADOR`, `PROFESSOR` ou `ADMIN`.
+                    """
+    )
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Busca realizada com sucesso", content = @Content(array = @ArraySchema(schema = @Schema(implementation = alunoResponseDTO.class)))),
-            @ApiResponse(responseCode = "401", description = "Não autenticado — token JWT ausente ou inválido", content = @Content)
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Lista de alunos retornada com sucesso",
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = alunoResponseDTO.class)))
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Não autenticado — token JWT ausente ou inválido",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Acesso negado — usuário sem permissão necessária",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))
+            )
     })
     @GetMapping("/buscar")
     @PreAuthorize("hasAnyRole('ALUNO', 'COORDENADOR', 'PROFESSOR', 'ADMIN')")
     public ResponseEntity<List<alunoResponseDTO>> buscarAlunos(
-            @Parameter(description = "Termo para buscar no nome do aluno", example = "Maria")
+            @Parameter(description = "Filtro parcial por nome do aluno (case-insensitive)", example = "Maria")
             @RequestParam(required = false) String nome,
-            @Parameter(description = "ID do curso para filtrar alunos", example = "1")
+            @Parameter(description = "ID do curso para filtrar alunos matriculados", example = "1")
             @RequestParam(required = false) Long cursoId
     ) {
         List<alunoResponseDTO> alunos;
@@ -111,12 +155,45 @@ public class alunoController {
         return ResponseEntity.ok(alunos);
     }
 
-    @Operation(summary = "Atualizar aluno", description = "Atualiza os dados de um aluno existente.")
+    @Operation(
+            summary = "Atualizar dados do aluno",
+            description = """
+                    Atualiza os dados de um aluno existente (dados do usuário e/ou vínculo de curso).
+                    
+                    **Permissões requeridas:** Papéis `ALUNO` ou `ADMIN`.
+                    """
+    )
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Aluno atualizado com sucesso", content = @Content(schema = @Schema(implementation = alunoResponseDTO.class))),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos — campos obrigatórios ausentes ou com formato incorreto", content = @Content(schema = @Schema(implementation = ProblemDetail.class))),
-            @ApiResponse(responseCode = "404", description = "Aluno não encontrado", content = @Content(schema = @Schema(implementation = ProblemDetail.class))),
-            @ApiResponse(responseCode = "401", description = "Não autenticado — token JWT ausente ou inválido", content = @Content)
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Aluno atualizado com sucesso",
+                    content = @Content(schema = @Schema(implementation = alunoResponseDTO.class))
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Dados inválidos — campos obrigatórios ausentes ou incorretos",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Não autenticado — token JWT ausente ou inválido",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Acesso negado — usuário não tem papel ALUNO ou ADMIN",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Aluno não encontrado para atualização",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "Conflito — e-mail informado já pertence a outro usuário",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))
+            )
     })
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ALUNO', 'ADMIN')")
@@ -128,11 +205,34 @@ public class alunoController {
         return ResponseEntity.ok(alunoService.atualizarAluno(id, request));
     }
 
-    @Operation(summary = "Deletar aluno", description = "Remove permanentemente um aluno do sistema.")
+    @Operation(
+            summary = "Remover aluno",
+            description = """
+                    Remove permanentemente um aluno do sistema pelo seu identificador único.
+                    
+                    **Permissões requeridas:** Apenas papel `ADMIN`.
+                    """
+    )
     @ApiResponses({
-            @ApiResponse(responseCode = "204", description = "Aluno removido com sucesso", content = @Content),
-            @ApiResponse(responseCode = "404", description = "Aluno não encontrado", content = @Content(schema = @Schema(implementation = ProblemDetail.class))),
-            @ApiResponse(responseCode = "401", description = "Não autenticado — token JWT ausente ou inválido", content = @Content)
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "Aluno removido com sucesso (sem conteúdo no corpo)"
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Não autenticado — token JWT ausente ou inválido",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Acesso negado — requer papel ADMIN",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Aluno não encontrado para exclusão",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))
+            )
     })
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
