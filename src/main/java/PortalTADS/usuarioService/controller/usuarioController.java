@@ -72,23 +72,32 @@ public class usuarioController {
 
     @Operation(
             summary = "Buscar usuário por ID",
-            description = "Retorna os dados de um usuário específico a partir do seu identificador único."
+            description = """
+                    Retorna os dados cadastrais de um usuário específico a partir do seu identificador único.
+                    
+                    **Permissões requeridas:** Papel `ADMIN`.
+                    """
     )
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
-                    description = "Usuário encontrado",
+                    description = "Usuário encontrado com sucesso",
                     content = @Content(schema = @Schema(implementation = usuarioResponseDTO.class))
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Usuário não encontrado",
-                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))
             ),
             @ApiResponse(
                     responseCode = "401",
                     description = "Não autenticado — token JWT ausente ou inválido",
-                    content = @Content
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Acesso negado — requer papel ADMIN",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Usuário não encontrado para o ID informado",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))
             )
     })
     @GetMapping("/{id}")
@@ -106,7 +115,7 @@ public class usuarioController {
             description = """
                     Retorna a lista completa de todos os usuários cadastrados no sistema.
                     
-                    **Requer papel `ADMIN`.**
+                    **Permissões requeridas:** Papel `ADMIN`.
                     """
     )
     @ApiResponses({
@@ -118,12 +127,12 @@ public class usuarioController {
             @ApiResponse(
                     responseCode = "401",
                     description = "Não autenticado — token JWT ausente ou inválido",
-                    content = @Content
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))
             ),
             @ApiResponse(
                     responseCode = "403",
-                    description = "Acesso negado — usuário não possui papel ADMIN",
-                    content = @Content
+                    description = "Acesso negado — requer papel ADMIN",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))
             )
     })
     @GetMapping
@@ -139,6 +148,8 @@ public class usuarioController {
                     Busca usuários cujo nome contenha o termo informado.
                     
                     Se o parâmetro `nome` não for fornecido, retorna todos os usuários.
+                    
+                    **Permissões requeridas:** Papel `ADMIN`.
                     """
     )
     @ApiResponses({
@@ -150,7 +161,12 @@ public class usuarioController {
             @ApiResponse(
                     responseCode = "401",
                     description = "Não autenticado — token JWT ausente ou inválido",
-                    content = @Content
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Acesso negado — requer papel ADMIN",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))
             )
     })
     @GetMapping("/buscar")
@@ -170,7 +186,11 @@ public class usuarioController {
 
     @Operation(
             summary = "Atualizar usuário",
-            description = "Atualiza os dados de um usuário existente. Todos os campos do corpo da requisição são obrigatórios."
+            description = """
+                    Atualiza os dados de um usuário existente. Todos os campos do corpo da requisição são obrigatórios.
+                    
+                    **Permissões requeridas:** Papel `ADMIN`.
+                    """
     )
     @ApiResponses({
             @ApiResponse(
@@ -184,14 +204,19 @@ public class usuarioController {
                     content = @Content(schema = @Schema(implementation = ProblemDetail.class))
             ),
             @ApiResponse(
-                    responseCode = "404",
-                    description = "Usuário não encontrado",
+                    responseCode = "401",
+                    description = "Não autenticado — token JWT ausente ou inválido",
                     content = @Content(schema = @Schema(implementation = ProblemDetail.class))
             ),
             @ApiResponse(
-                    responseCode = "401",
-                    description = "Não autenticado — token JWT ausente ou inválido",
-                    content = @Content
+                    responseCode = "403",
+                    description = "Acesso negado — requer papel ADMIN",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Usuário não encontrado",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))
             ),
             @ApiResponse(
                     responseCode = "409",
@@ -200,7 +225,7 @@ public class usuarioController {
             )
     })
     @PutMapping("/{id}")
-    @PreAuthorize( "hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize( "hasRole('ADMIN')")
     public ResponseEntity<usuarioResponseDTO> atualizarUsuario(
             @Parameter(description = "ID único do usuário a ser atualizado", required = true, example = "1")
             @PathVariable Long id,
@@ -212,23 +237,31 @@ public class usuarioController {
 
     @Operation(
             summary = "Deletar usuário",
-            description = "Remove permanentemente um usuário do sistema pelo seu ID."
+            description = """
+                    Remove permanentemente um usuário do sistema pelo seu ID.
+                    
+                    **Permissões requeridas:** Papel `ADMIN`.
+                    """
     )
     @ApiResponses({
             @ApiResponse(
                     responseCode = "204",
-                    description = "Usuário removido com sucesso",
-                    content = @Content
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Usuário não encontrado",
-                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))
+                    description = "Usuário removido com sucesso (sem corpo na resposta)"
             ),
             @ApiResponse(
                     responseCode = "401",
                     description = "Não autenticado — token JWT ausente ou inválido",
-                    content = @Content
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Acesso negado — requer papel ADMIN",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Usuário não encontrado para exclusão",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))
             )
     })
     @DeleteMapping("/{id}")

@@ -25,27 +25,42 @@ public class OpenApiConfig {
                         .title("Portal TADS - API de Usuários")
                         .version("1.0.0")
                         .description("""
-                                API REST do microserviço de usuários do Portal TADS.
+                                ## Microsserviço de Gerenciamento de Usuários
                                 
-                                Gerencia o cadastro, autenticação e manutenção de **usuários** e **professores**.
+                                Esta API REST é responsável pelo ecossistema de autenticação, usuários e perfis educacionais do **Portal TADS**.
                                 
-                                ### Autenticação
-                                A maioria dos endpoints requer um token JWT válido obtido via `POST /auth/login`.
-                                Clique no botão **Authorize** e informe o token no formato: `Bearer <seu_token>`.
+                                ### Módulos e Funcionalidades:
+                                - 🔐 **Autenticação**: Emissão de tokens JWT via login seguro.
+                                - 👤 **Usuários**: CRUD completo de contas de acesso ao sistema com papéis (`ADMIN`, `PROFESSOR`, `COORDENADOR`, `ALUNO`).
+                                - 👨‍🏫 **Professores**: Gestão do corpo docente vinculado a cursos e titulações acadêmicas.
+                                - 🎓 **Alunos**: Cadastro e acompanhamento de discentes vinculados a cursos.
+                                - 📋 **Coordenadores**: Gestão de coordenação de cursos integrada aos professores.
+                                
+                                ---
+                                
+                                ### 🔑 Guia de Autenticação
+                                1. Acesse o endpoint **`POST /auth/login`** com suas credenciais.
+                                2. Copie o token retornado no campo `token`.
+                                3. Clique no botão verde **Authorize** no topo direito do Swagger.
+                                4. Cole o token (apenas o token JWT ou com prefixo `Bearer`).
                                 """)
                         .contact(new Contact()
-                                .name("Equipe Portal TADS")
+                                .name("Suporte Portal TADS")
                                 .email("contato@portaltads.com")
+                                .url("https://portaltads.com")
                         )
                         .license(new License()
-                                .name("MIT")
+                                .name("MIT License")
                                 .url("https://opensource.org/licenses/MIT")
                         )
                 )
                 .servers(List.of(
                         new Server()
                                 .url("http://localhost:8080")
-                                .description("Servidor de desenvolvimento local")
+                                .description("Ambiente Local / Desenvolvimento"),
+                        new Server()
+                                .url("https://api.portaltads.com")
+                                .description("Ambiente de Produção (Exemplo)")
                 ))
                 .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
                 .components(new Components()
@@ -55,7 +70,7 @@ public class OpenApiConfig {
                                         .type(SecurityScheme.Type.HTTP)
                                         .scheme("bearer")
                                         .bearerFormat("JWT")
-                                        .description("Insira o token JWT obtido no endpoint de login")
+                                        .description("Informe o token JWT gerado pelo endpoint `/auth/login`.")
                         )
                 );
     }

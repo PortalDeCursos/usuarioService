@@ -37,7 +37,7 @@ public class professorController {
             description = """
                     Cria um novo professor no sistema, associando-o a um usuário e a um curso.
                     
-                    **Requer papel `ADMIN`.**
+                    **Permissões requeridas:** Papéis `ADMIN`, `PROFESSOR` ou `COORDENADOR`.
                     
                     O corpo da requisição inclui os dados do usuário (que será criado automaticamente)
                     e as informações específicas do professor (curso, titulação e descrição).
@@ -58,12 +58,12 @@ public class professorController {
             @ApiResponse(
                     responseCode = "401",
                     description = "Não autenticado — token JWT ausente ou inválido",
-                    content = @Content
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))
             ),
             @ApiResponse(
                     responseCode = "403",
-                    description = "Acesso negado — usuário não possui papel ADMIN",
-                    content = @Content
+                    description = "Acesso negado — usuário não possui o papel necessário",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))
             ),
             @ApiResponse(
                     responseCode = "409",
@@ -87,18 +87,18 @@ public class professorController {
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
-                    description = "Professor encontrado",
+                    description = "Professor encontrado com sucesso",
                     content = @Content(schema = @Schema(implementation = professorResponseDTO.class))
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Professor não encontrado",
-                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))
             ),
             @ApiResponse(
                     responseCode = "401",
                     description = "Não autenticado — token JWT ausente ou inválido",
-                    content = @Content
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Professor não encontrado para o ID fornecido",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))
             )
     })
     @GetMapping("/{id}")
@@ -131,7 +131,7 @@ public class professorController {
             @ApiResponse(
                     responseCode = "401",
                     description = "Não autenticado — token JWT ausente ou inválido",
-                    content = @Content
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))
             )
     })
     @GetMapping("/buscar")
@@ -157,7 +157,7 @@ public class professorController {
             description = """
                     Atualiza os dados de um professor existente, incluindo os dados do usuário vinculado.
                     
-                    **Requer papel `PROFESSOR`.**
+                    **Permissões requeridas:** Papéis `PROFESSOR`, `ADMIN` ou `COORDENADOR`.
                     """
     )
     @ApiResponses({
@@ -172,19 +172,24 @@ public class professorController {
                     content = @Content(schema = @Schema(implementation = ProblemDetail.class))
             ),
             @ApiResponse(
-                    responseCode = "404",
-                    description = "Professor não encontrado",
+                    responseCode = "401",
+                    description = "Não autenticado — token JWT ausente ou inválido",
                     content = @Content(schema = @Schema(implementation = ProblemDetail.class))
             ),
             @ApiResponse(
-                    responseCode = "401",
-                    description = "Não autenticado — token JWT ausente ou inválido",
-                    content = @Content
+                    responseCode = "403",
+                    description = "Acesso negado — usuário não possui permissão para atualizar este recurso",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))
             ),
             @ApiResponse(
-                    responseCode = "403",
-                    description = "Acesso negado — usuário não possui papel PROFESSOR",
-                    content = @Content
+                    responseCode = "404",
+                    description = "Professor não encontrado para atualização",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "Conflito — e-mail informado já pertence a outro usuário",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))
             )
     })
     @PutMapping("/{id}")
@@ -203,29 +208,28 @@ public class professorController {
             description = """
                     Remove permanentemente um professor do sistema.
                     
-                    **Requer papel `ADMIN`.**
+                    **Permissões requeridas:** Papéis `ADMIN`, `PROFESSOR` ou `COORDENADOR`.
                     """
     )
     @ApiResponses({
             @ApiResponse(
                     responseCode = "204",
-                    description = "Professor removido com sucesso",
-                    content = @Content
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "Professor não encontrado",
-                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))
+                    description = "Professor removido com sucesso (sem corpo na resposta)"
             ),
             @ApiResponse(
                     responseCode = "401",
                     description = "Não autenticado — token JWT ausente ou inválido",
-                    content = @Content
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))
             ),
             @ApiResponse(
                     responseCode = "403",
-                    description = "Acesso negado — usuário não possui papel ADMIN",
-                    content = @Content
+                    description = "Acesso negado — usuário não possui permissão necessária",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Professor não encontrado para exclusão",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))
             )
     })
     @DeleteMapping("/{id}")
