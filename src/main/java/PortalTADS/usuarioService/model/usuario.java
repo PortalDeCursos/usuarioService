@@ -14,6 +14,5 @@ public class usuario {
     private String nome;
     private String email;
     private String senha;
-    private String username;
     private roleUsuario tipoUsuario;
 }

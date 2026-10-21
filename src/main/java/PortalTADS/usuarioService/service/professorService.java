@@ -82,8 +82,7 @@ public class professorService {
 
         usuarioEntity.setNome(professorRequestDTO.usuario().nome());
         usuarioEntity.setEmail(professorRequestDTO.usuario().email());
-        usuarioEntity.setUsername(professorRequestDTO.usuario().username());
-        usuarioEntity.setSenha(professorRequestDTO.usuario().senha());
+        usuarioEntity.setSenha(passwordEncoder.encode(professorRequestDTO.usuario().senha()));
         usuarioEntity.setTipoUsuario(roleUsuario.PROFESSOR);
 
         usuarioEntity usuarioAtualizado = usuarioRepository.save(usuarioEntity);

@@ -38,18 +38,7 @@ public record usuarioRequestDTO(
                 maxLength = 100,
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
-        String senha,
+        String senha
 
-        @NotBlank(message = "O username é obrigatório")
-        @Size(min = 3, max = 50,
-                message = "O username deve ter entre 3 e 50 caracteres")
-        @Schema(
-                description = "Nome de usuário único para identificação no sistema",
-                example = "joao.silva",
-                minLength = 3,
-                maxLength = 50,
-                requiredMode = Schema.RequiredMode.REQUIRED
-        )
-        String username
 ) {
 }

@@ -48,7 +48,8 @@ public class ConfiguracaoSeguranca {
                         ).permitAll()
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/usuarios").permitAll()
-                        .anyRequest().authenticated()
+//                        .anyRequest().authenticated()
+                                .requestMatchers("/alunos").permitAll()
                 )
                 .addFilterBefore(
                         filtroJwtAutenticacao,

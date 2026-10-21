@@ -1,35 +1,36 @@
 
--- =========================================
--- USUARIO
--- =========================================
-
 CREATE TABLE usuario (
-     id BIGSERIAL PRIMARY KEY,
+     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
      nome VARCHAR(255) NOT NULL,
      email VARCHAR(255) NOT NULL UNIQUE,
-     username VARCHAR(255) NOT NULL UNIQUE,
      senha VARCHAR(255) NOT NULL,
-     tipo_usuario VARCHAR(255) NOT NULL,
-     criado_em TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-
+     role_usuario VARCHAR(50) NOT NULL,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-
--- =========================================
--- PROFESSOR
--- =========================================
-
-CREATE TABLE professor (
-   id BIGSERIAL PRIMARY KEY,
-
+-- Tabela Aluno
+CREATE TABLE aluno (
+   id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
    usuario_id BIGINT NOT NULL,
-   curso_id BIGINT,
+   curso_id BIGINT NOT NULL,
+   CONSTRAINT fk_aluno_usuario FOREIGN KEY (usuario_id) REFERENCES usuario (id) ON DELETE CASCADE
+);
 
-   titulacao VARCHAR(255) NOT NULL,
-   descricao VARCHAR(255),
+-- Tabela Professor
+CREATE TABLE professor (
+       id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+       usuario_id BIGINT NOT NULL,
+       curso_id BIGINT NOT NULL,
+       titulacao VARCHAR(50) NOT NULL,
 
-   CONSTRAINT fk_professor_usuario
-       FOREIGN KEY (usuario_id)
-           REFERENCES usuario(id)
+       descricao TEXT,
+       CONSTRAINT fk_professor_usuario FOREIGN KEY (usuario_id) REFERENCES usuario (id) ON DELETE CASCADE
+);
 
+-- Tabela Coordenador
+CREATE TABLE coordenador (
+         id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+         professor_id BIGINT NOT NULL,
+         curso_id BIGINT NOT NULL,
+         CONSTRAINT fk_coordenador_professor FOREIGN KEY (professor_id) REFERENCES professor (id) ON DELETE CASCADE
 );

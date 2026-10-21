@@ -27,7 +27,6 @@ public class admSeeder {
 
             admin.setNome("Administrador");
             admin.setEmail("admin@portaltads.com");
-            admin.setUsername("admin");
             admin.setSenha(passwordEncoder.encode("suasenha"));
             admin.setTipoUsuario(roleUsuario.ADMIN);
 

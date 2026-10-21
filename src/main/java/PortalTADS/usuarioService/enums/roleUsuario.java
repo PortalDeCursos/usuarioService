@@ -2,6 +2,7 @@ package PortalTADS.usuarioService.enums;
 
 public enum roleUsuario {
     ADMIN,
-    USER,
-    PROFESSOR
+    ALUNO,
+    COORDENADOR,
+    PROFESSOR,
 }
