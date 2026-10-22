@@ -21,7 +21,7 @@ public class autenticacaoService {
         try {
             Authentication autenticado = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequestDTO.getEmail(), loginRequestDTO.getSenha()));
             String token = tokenProvider.gerarToken(autenticado);
-            return new loginResponseDTO(token, tokenProvider.getExpiracao());
+            return new loginResponseDTO(token, tokenProvider.getExpiracao(), tokenProvider.getRole(token));
         } catch (Exception e) {
             throw new Exception("Erro ao autenticar usuário", e);
         }

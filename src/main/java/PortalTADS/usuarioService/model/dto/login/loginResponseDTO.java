@@ -1,5 +1,6 @@
 package PortalTADS.usuarioService.model.dto.login;
 
+import PortalTADS.usuarioService.enums.roleUsuario;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,4 +23,10 @@ public class loginResponseDTO {
             example = "3600000"
     )
     private long expiracao;
+
+    @Schema(
+            description = "Role do usuário autenticado",
+            example = "ADMIN"
+    )
+    private String role;
 }

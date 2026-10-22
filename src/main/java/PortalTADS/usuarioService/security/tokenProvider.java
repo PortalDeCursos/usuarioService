@@ -26,6 +26,7 @@ public class tokenProvider {
         return buildToken(usuario.getUsername(), usuario.getRole());
     }
 
+
     private String buildToken(String username, String role) {
         Date agora = new Date();
         Date expiracao = new Date(agora.getTime() + tempoExpiracao);
@@ -66,6 +67,10 @@ public class tokenProvider {
 
     public String getUsername(String token) {
         return getClaims(token).getSubject();
+    }
+
+    public String getRole(String token) {
+        return getClaims(token).get("role", String.class);
     }
 
     public long getExpiracao() {
