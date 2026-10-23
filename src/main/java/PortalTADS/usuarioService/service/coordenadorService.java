@@ -1,5 +1,6 @@
 package PortalTADS.usuarioService.service;
 
+import PortalTADS.usuarioService.exception.CoordenadorJaCadastratoException;
 import PortalTADS.usuarioService.exception.UsuarioNaoEncontradoException;
 import PortalTADS.usuarioService.model.coordenador;
 import PortalTADS.usuarioService.model.dto.coordenador.coordenadorRequestDTO;
@@ -29,7 +30,7 @@ public class coordenadorService {
 
 
         if (coordenadorRepository.existsByProfessorId(request.professorId())) {
-            throw new RuntimeException("Professor já está cadastrado como coordenador");
+            throw new CoordenadorJaCadastratoException(request.professorId());
         }
 
         coordenador coordenadorModel = coordenadorMapper.toModel(request);
@@ -67,7 +68,7 @@ public class coordenadorService {
                 .orElseThrow(() -> new UsuarioNaoEncontradoException(id));
 
         if (coordenadorRepository.existsByProfessorIdAndIdNot(request.professorId(), id)) {
-            throw new RuntimeException("Professor já está cadastrado como coordenador");
+            throw new CoordenadorJaCadastratoException(id);
         }
 
         professorEntity professor = professorRepository.findById(request.professorId())
