@@ -1,5 +1,7 @@
 package PortalTADS.usuarioService.service;
 
+import PortalTADS.usuarioService.exception.CoordenadorJaCadastratoException;
+import PortalTADS.usuarioService.exception.UsuarioNaoEncontradoException;
 import PortalTADS.usuarioService.model.coordenador;
 import PortalTADS.usuarioService.model.dto.coordenador.coordenadorRequestDTO;
 import PortalTADS.usuarioService.model.dto.coordenador.coordenadorResponseDTO;
@@ -28,13 +30,13 @@ public class coordenadorService {
 
 
         if (coordenadorRepository.existsByProfessorId(request.professorId())) {
-            throw new RuntimeException("Professor já está cadastrado como coordenador");
+            throw new CoordenadorJaCadastratoException(request.professorId());
         }
 
         coordenador coordenadorModel = coordenadorMapper.toModel(request);
 
         professorEntity professor = professorRepository.findById(request.professorId())
-                .orElseThrow(() -> new RuntimeException("Professor não encontrado"));
+                .orElseThrow(() -> new UsuarioNaoEncontradoException(request.professorId()));
 
         coordenadorEntity entity = coordenadorMapper.toEntity(coordenadorModel);
         entity.setProfessor(professor);
@@ -44,7 +46,7 @@ public class coordenadorService {
 
     public coordenadorResponseDTO buscarCoordenadorPorId(Long id) {
         coordenadorEntity entity = coordenadorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Coordenador não encontrado"));
+                .orElseThrow(() -> new UsuarioNaoEncontradoException(id));
         return coordenadorMapper.toResponse(entity);
     }
 
@@ -63,14 +65,14 @@ public class coordenadorService {
     @Transactional
     public coordenadorResponseDTO atualizarCoordenador(Long id, coordenadorRequestDTO request) {
         coordenadorEntity entity = coordenadorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Coordenador não encontrado"));
+                .orElseThrow(() -> new UsuarioNaoEncontradoException(id));
 
         if (coordenadorRepository.existsByProfessorIdAndIdNot(request.professorId(), id)) {
-            throw new RuntimeException("Professor já está cadastrado como coordenador");
+            throw new CoordenadorJaCadastratoException(id);
         }
 
         professorEntity professor = professorRepository.findById(request.professorId())
-                .orElseThrow(() -> new RuntimeException("Professor não encontrado"));
+                .orElseThrow(() -> new UsuarioNaoEncontradoException(request.professorId()));
 
         entity.setProfessor(professor);
         entity.setCursoId(request.cursoId());
@@ -82,7 +84,7 @@ public class coordenadorService {
     @Transactional
     public void deletarCoordenador(Long id) {
         coordenadorEntity entity = coordenadorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Coordenador não encontrado"));
+                .orElseThrow(() -> new UsuarioNaoEncontradoException(id));
 
         coordenadorRepository.delete(entity);
     }

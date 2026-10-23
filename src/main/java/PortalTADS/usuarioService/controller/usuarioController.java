@@ -64,6 +64,7 @@ public class usuarioController {
     })
     @SecurityRequirements
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<usuarioResponseDTO> salvarUsuario(@RequestBody @Valid usuarioRequestDTO record) {
         usuarioResponseDTO response = service.salvarUsuario(record);
         URI location = URI.create("/usuarios/" + response.getId());

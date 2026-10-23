@@ -2,6 +2,7 @@ package PortalTADS.usuarioService.service;
 
 import PortalTADS.usuarioService.enums.roleUsuario;
 import PortalTADS.usuarioService.exception.EmailDuplicadoException;
+import PortalTADS.usuarioService.exception.UsuarioNaoEncontradoException;
 import PortalTADS.usuarioService.model.dto.usuario.usuarioRequestDTO;
 import PortalTADS.usuarioService.model.dto.usuario.usuarioResponseDTO;
 import PortalTADS.usuarioService.model.mapper.usuarioMapper;
@@ -38,12 +39,14 @@ public class usuarioService {
     }
 
     public usuarioResponseDTO buscarUsuario(Long id) {
-        usuarioEntity entity = repository.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        usuarioEntity entity = repository.findById(id).orElseThrow(()
+                -> new UsuarioNaoEncontradoException(id));
         return mapper.toResponse(entity);
     }
 
     public usuarioResponseDTO atualizarUsuario(Long id, usuarioRequestDTO record) {
-        usuarioEntity entity = repository.findById(id).orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+        usuarioEntity entity = repository.findById(id).orElseThrow(()
+                -> new UsuarioNaoEncontradoException(id));
 
         if (repository.existsByEmailAndIdNot(record.email(), id)) {
             throw new EmailDuplicadoException("Email já cadastrado.");
@@ -60,7 +63,7 @@ public class usuarioService {
     public void deletar(Long id) {
 
         if(!repository.existsById(id)) {
-            throw new RuntimeException("Usuário não encontrado");
+            throw new UsuarioNaoEncontradoException(id);
         }
 
         repository.deleteById(id);
@@ -79,5 +82,5 @@ public class usuarioService {
         return mapper.toResponseList(enitdades);
     }
 
-    /////
+
 }

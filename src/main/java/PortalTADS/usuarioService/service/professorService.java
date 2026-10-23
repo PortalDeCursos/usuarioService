@@ -3,6 +3,7 @@ package PortalTADS.usuarioService.service;
 import PortalTADS.usuarioService.enums.roleUsuario;
 import PortalTADS.usuarioService.enums.titulacaoProfessor;
 import PortalTADS.usuarioService.exception.EmailDuplicadoException;
+import PortalTADS.usuarioService.exception.UsuarioNaoEncontradoException;
 import PortalTADS.usuarioService.model.dto.professor.professorRequestDTO;
 import PortalTADS.usuarioService.model.dto.professor.professorResponseDTO;
 import PortalTADS.usuarioService.model.mapper.professorMapper;
@@ -51,7 +52,8 @@ public class professorService {
     }
 
     public professorResponseDTO buscarProfessorPorId(Long id) {
-        professorEntity entity = professorRepository.findById(id).orElseThrow(() -> new RuntimeException("Professor não encontrado"));
+        professorEntity entity = professorRepository.findById(id).orElseThrow(() ->
+                new UsuarioNaoEncontradoException(id));
         return professorMapper.toResponse(entity);
     }
 
@@ -73,7 +75,7 @@ public class professorService {
     @Transactional
     public professorResponseDTO atualizarProfessor(Long id, professorRequestDTO professorRequestDTO) {
         professorEntity entity = professorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Professor não encontrado"));
+                .orElseThrow(() -> new UsuarioNaoEncontradoException(id));
 
         usuarioEntity usuarioEntity = entity.getUsuario();
         if (usuarioRepository.existsByEmailAndIdNot(professorRequestDTO.usuario().email(), usuarioEntity.getId())) {
@@ -99,7 +101,7 @@ public class professorService {
     @Transactional
     public void deletarProfessor(Long id) {
         professorEntity entity = professorRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Professor não encontrado"));
+                .orElseThrow(() -> new UsuarioNaoEncontradoException(id));
 
         Long usuarioId = entity.getUsuario().getId();
         professorRepository.delete(entity);
