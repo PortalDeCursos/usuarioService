@@ -58,8 +58,17 @@ public class GlobalExceptionHandler {
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
         problem.setTitle("Usuário não encontrado");
         problem.setProperty("timestamp", LocalDateTime.now());
+        problem.setDetail(ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(problem);
     }
+    @ExceptionHandler(CoordenadorJaCadastratoException.class)
+    public ResponseEntity<ProblemDetail> handleCoordenadorJaCadastrato(CoordenadorJaCadastratoException ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
+        problem.setTitle("Coordenador já cadastrado");
+        problem.setProperty("timestamp", LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(problem);
+    }
+
 
 
     // para valores inválidos no corpo da requisição

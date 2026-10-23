@@ -53,7 +53,7 @@ public class alunoService {
 
     public alunoResponseDTO buscarAlunoPorId(Long id) {
         alunoEntity entity = alunoRepository.findById(id)
-                .orElseThrow(() -> new UsuarioNaoEncontradoException("Aluno não encontrado"));
+                .orElseThrow(() -> new UsuarioNaoEncontradoException(id));
         return alunoMapper.toResponse(entity);
     }
 
@@ -72,7 +72,7 @@ public class alunoService {
     @Transactional
     public alunoResponseDTO atualizarAluno(Long id, alunoRequestDTO request) {
         alunoEntity entity = alunoRepository.findById(id)
-                .orElseThrow(() -> new UsuarioNaoEncontradoException("Aluno não encontrado"));
+                .orElseThrow(() -> new UsuarioNaoEncontradoException(id));
 
         usuarioEntity usuarioEntity = entity.getUsuario();
         if (usuarioRepository.existsByEmailAndIdNot(request.usuario().email(), usuarioEntity.getId())) {
@@ -96,7 +96,7 @@ public class alunoService {
     @Transactional
     public void deletarAluno(Long id) {
         alunoEntity entity = alunoRepository.findById(id)
-                .orElseThrow(() -> new UsuarioNaoEncontradoException("Aluno não encontrado"));
+                .orElseThrow(() -> new UsuarioNaoEncontradoException(id));
 
         Long usuarioId = entity.getUsuario().getId();
         alunoRepository.delete(entity);

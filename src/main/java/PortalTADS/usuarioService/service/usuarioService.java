@@ -40,13 +40,13 @@ public class usuarioService {
 
     public usuarioResponseDTO buscarUsuario(Long id) {
         usuarioEntity entity = repository.findById(id).orElseThrow(()
-                -> new UsuarioNaoEncontradoException("Administrador não encontrado"));
+                -> new UsuarioNaoEncontradoException(id));
         return mapper.toResponse(entity);
     }
 
     public usuarioResponseDTO atualizarUsuario(Long id, usuarioRequestDTO record) {
         usuarioEntity entity = repository.findById(id).orElseThrow(()
-                -> new UsuarioNaoEncontradoException("Administrador não encontrado"));
+                -> new UsuarioNaoEncontradoException(id));
 
         if (repository.existsByEmailAndIdNot(record.email(), id)) {
             throw new EmailDuplicadoException("Email já cadastrado.");
@@ -63,7 +63,7 @@ public class usuarioService {
     public void deletar(Long id) {
 
         if(!repository.existsById(id)) {
-            throw new UsuarioNaoEncontradoException("Administrador não encontrado");
+            throw new UsuarioNaoEncontradoException(id);
         }
 
         repository.deleteById(id);
