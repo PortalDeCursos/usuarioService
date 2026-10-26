@@ -71,7 +71,7 @@ public class professorController {
                     content = @Content(schema = @Schema(implementation = ProblemDetail.class))
             )
     })
-    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR', 'COORDENADOR')")
+//    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR', 'COORDENADOR')")
     @PostMapping
     public ResponseEntity<professorResponseDTO> criarProfessor(@RequestBody @Valid professorRequestDTO request) {
 

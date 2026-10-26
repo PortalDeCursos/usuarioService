@@ -2,6 +2,7 @@ package PortalTADS.usuarioService.service;
 
 
 import PortalTADS.usuarioService.security.tokenProvider;
+import PortalTADS.usuarioService.security.userDetails;
 import PortalTADS.usuarioService.model.dto.login.loginRequestDTO;
 import PortalTADS.usuarioService.model.dto.login.loginResponseDTO;
 import lombok.AllArgsConstructor;
@@ -21,8 +22,10 @@ public class autenticacaoService {
         try {
             Authentication autenticado = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequestDTO.getEmail(), loginRequestDTO.getSenha()));
             String token = tokenProvider.gerarToken(autenticado);
-            return new loginResponseDTO(token, tokenProvider.getExpiracao(), tokenProvider.getRole(token));
+            String role = ((userDetails) autenticado.getPrincipal()).getRole();
+            return new loginResponseDTO(token, tokenProvider.getExpiracao(), role);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new Exception("Erro ao autenticar usuário", e);
         }
 
