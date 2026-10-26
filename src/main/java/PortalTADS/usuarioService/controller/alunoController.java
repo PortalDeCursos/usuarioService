@@ -61,7 +61,6 @@ public class alunoController {
     })
     @SecurityRequirements
     @PostMapping
-    @PreAuthorize("permitAll()")
     public ResponseEntity<alunoResponseDTO> criarAluno(@RequestBody @Valid alunoRequestDTO request) {
         alunoResponseDTO response = alunoService.criarAluno(request);
         URI location = URI.create("/alunos/" + response.getId());
@@ -99,7 +98,6 @@ public class alunoController {
             )
     })
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ALUNO', 'COORDENADOR', 'PROFESSOR', 'ADMIN')")
     public ResponseEntity<alunoResponseDTO> buscarAlunoPorId(
             @Parameter(description = "ID numérico único do aluno", required = true, example = "1")
             @PathVariable Long id
@@ -137,7 +135,6 @@ public class alunoController {
             )
     })
     @GetMapping("/buscar")
-    @PreAuthorize("hasAnyRole('ALUNO', 'COORDENADOR', 'PROFESSOR', 'ADMIN')")
     public ResponseEntity<List<alunoResponseDTO>> buscarAlunos(
             @Parameter(description = "Filtro parcial por nome do aluno (case-insensitive)", example = "Maria")
             @RequestParam(required = false) String nome,
@@ -196,7 +193,6 @@ public class alunoController {
             )
     })
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ALUNO', 'ADMIN')")
     public ResponseEntity<alunoResponseDTO> atualizarAluno(
             @Parameter(description = "ID único do aluno a ser atualizado", required = true, example = "1")
             @PathVariable Long id,
@@ -235,7 +231,6 @@ public class alunoController {
             )
     })
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deletarAluno(
             @Parameter(description = "ID único do aluno a ser removido", required = true, example = "1")
             @PathVariable Long id

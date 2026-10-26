@@ -71,7 +71,6 @@ public class professorController {
                     content = @Content(schema = @Schema(implementation = ProblemDetail.class))
             )
     })
-//    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR', 'COORDENADOR')")
     @PostMapping
     public ResponseEntity<professorResponseDTO> criarProfessor(@RequestBody @Valid professorRequestDTO request) {
 
@@ -193,7 +192,6 @@ public class professorController {
             )
     })
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('PROFESSOR', 'ADMIN', 'COORDENADOR')")
     public ResponseEntity<professorResponseDTO> atualizarProfessor(
             @Parameter(description = "ID único do professor a ser atualizado", required = true, example = "1")
             @PathVariable Long id,
@@ -233,7 +231,6 @@ public class professorController {
             )
     })
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'PROFESSOR', 'COORDENADOR')")
     public ResponseEntity<Void> deletarProfessor(
             @Parameter(description = "ID único do professor a ser removido", required = true, example = "1")
             @PathVariable Long id

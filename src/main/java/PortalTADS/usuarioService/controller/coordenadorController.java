@@ -67,7 +67,6 @@ public class coordenadorController {
                     content = @Content(schema = @Schema(implementation = ProblemDetail.class))
             )
     })
-    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<coordenadorResponseDTO> criarCoordenador(@RequestBody @Valid coordenadorRequestDTO request) {
         coordenadorResponseDTO response = coordenadorService.criarCoordenador(request);
@@ -106,7 +105,6 @@ public class coordenadorController {
             )
     })
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('COORDENADOR')")
     public ResponseEntity<coordenadorResponseDTO> buscarCoordenadorPorId(
             @Parameter(description = "ID numérico único do coordenador", required = true, example = "1")
             @PathVariable Long id
@@ -144,7 +142,6 @@ public class coordenadorController {
             )
     })
     @GetMapping("/buscar")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('COORDENADOR')")
     public ResponseEntity<List<coordenadorResponseDTO>> buscarCoordenadores(
             @Parameter(description = "Filtro parcial por nome do coordenador (case-insensitive)", example = "Maria")
             @RequestParam(required = false) String nome,
@@ -198,7 +195,6 @@ public class coordenadorController {
             )
     })
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or hasRole('COORDENADOR')")
     public ResponseEntity<coordenadorResponseDTO> atualizarCoordenador(
             @Parameter(description = "ID único do coordenador a ser atualizado", required = true, example = "1")
             @PathVariable Long id,
@@ -237,7 +233,6 @@ public class coordenadorController {
             )
     })
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deletarCoordenador(
             @Parameter(description = "ID único do coordenador a ser removido", required = true, example = "1")
             @PathVariable Long id
