@@ -26,7 +26,7 @@ import java.util.List;
 
 //////
 @RestController
-@RequestMapping("/usuarios")
+@RequestMapping("/admin")
 @AllArgsConstructor
 @Tag(name = "Usuários", description = "Gerenciamento de usuários do sistema (CRUD completo)")
 public class usuarioController {
