@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface professorRepository extends JpaRepository<professorEntity, Long> {
@@ -24,4 +25,8 @@ public interface professorRepository extends JpaRepository<professorEntity, Long
 
     List<professorEntity> findByTitulacao(titulacaoProfessor titulacao);
 
+
+    boolean existsByUsuario_Id(Long id);
+
+    Optional<professorEntity> findByUsuario_Id(Long id);
 }

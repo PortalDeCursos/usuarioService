@@ -24,4 +24,7 @@ public interface alunoRepository extends JpaRepository<alunoEntity, Long> {
 
 
     Optional<alunoEntity> findById(Long id);
+
+
+    boolean existsByUsuario_Id(Long id);
 }
