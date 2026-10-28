@@ -29,23 +29,23 @@ public class filtroJwtAutenticacao extends OncePerRequestFilter {
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
 
-        String autorizacaoHeader = request.getHeader("Authorization");
-
-        if (!StringUtils.hasText(autorizacaoHeader)
-                || !autorizacaoHeader.startsWith("Bearer ")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-        String token = autorizacaoHeader.substring(7);
-
-        if (tokenProvider.validarToken(token )) {
-            String username = tokenProvider.getUsername(token);
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                    userDetails, null, userDetails.getAuthorities()
-            );
-            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-        }
+//        String autorizacaoHeader = request.getHeader("Authorization");
+//
+//        if (!StringUtils.hasText(autorizacaoHeader)
+//                || !autorizacaoHeader.startsWith("Bearer ")) {
+//            filterChain.doFilter(request, response);
+//            return;
+//        }
+//        String token = autorizacaoHeader.substring(7);
+//
+//        if (tokenProvider.validarToken(token )) {
+//            String username = tokenProvider.getUsername(token);
+//            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+//            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+//                    userDetails, null, userDetails.getAuthorities()
+//            );
+//            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+//        }
 
 
         filterChain.doFilter(request, response);

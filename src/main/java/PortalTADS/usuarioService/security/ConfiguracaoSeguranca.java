@@ -19,11 +19,11 @@ import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-@EnableMethodSecurity
+//@EnableMethodSecurity
 @AllArgsConstructor
 public class ConfiguracaoSeguranca {
 
-    private final filtroJwtAutenticacao filtroJwtAutenticacao;
+//    private final filtroJwtAutenticacao filtroJwtAutenticacao;
 
 
     @Bean
@@ -50,12 +50,12 @@ public class ConfiguracaoSeguranca {
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/usuarios").permitAll()
                         .requestMatchers(HttpMethod.POST, "/alunos", "/alunos/").permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
-                .addFilterBefore(
-                        filtroJwtAutenticacao,
-                        UsernamePasswordAuthenticationFilter.class
-                )
+//                .addFilterBefore(
+//                        filtroJwtAutenticacao,
+//                        UsernamePasswordAuthenticationFilter.class
+//                )
                 .build();
     }
 

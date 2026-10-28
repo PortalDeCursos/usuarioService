@@ -26,7 +26,7 @@ import java.util.List;
 
 //////
 @RestController
-@RequestMapping("/usuarios")
+@RequestMapping("/admin")
 @AllArgsConstructor
 @Tag(name = "Usuários", description = "Gerenciamento de usuários do sistema (CRUD completo)")
 public class usuarioController {
@@ -64,7 +64,6 @@ public class usuarioController {
     })
     @SecurityRequirements
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<usuarioResponseDTO> salvarUsuario(@RequestBody @Valid usuarioRequestDTO record) {
         usuarioResponseDTO response = service.salvarUsuario(record);
         URI location = URI.create("/usuarios/" + response.getId());
@@ -102,7 +101,6 @@ public class usuarioController {
             )
     })
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<usuarioResponseDTO> buscarUsuario(
             @Parameter(description = "ID único do usuário", required = true, example = "1")
             @PathVariable Long id
@@ -137,7 +135,6 @@ public class usuarioController {
             )
     })
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<usuarioResponseDTO>> listarUsuarios() {
         List<usuarioResponseDTO> response = service.listarUsuarios();
         return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -171,7 +168,6 @@ public class usuarioController {
             )
     })
     @GetMapping("/buscar")
-    @PreAuthorize( "hasRole('ADMIN')")
     public ResponseEntity<List<usuarioResponseDTO>> buscarUsuariosPorNome(
             @Parameter(description = "Termo para buscar no nome do usuário (parcial, case-insensitive)", example = "João")
             @RequestParam(required = false) String nome
@@ -226,7 +222,7 @@ public class usuarioController {
             )
     })
     @PutMapping("/{id}")
-    @PreAuthorize( "hasRole('ADMIN')")
+
     public ResponseEntity<usuarioResponseDTO> atualizarUsuario(
             @Parameter(description = "ID único do usuário a ser atualizado", required = true, example = "1")
             @PathVariable Long id,
@@ -266,7 +262,6 @@ public class usuarioController {
             )
     })
     @DeleteMapping("/{id}")
-    @PreAuthorize( " hasRole('ADMIN')")
     public ResponseEntity<Void> deletarUsuario(
             @Parameter(description = "ID único do usuário a ser removido", required = true, example = "1")
             @PathVariable Long id

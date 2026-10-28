@@ -45,33 +45,33 @@ public class tokenProvider {
         return Keys.hmacShaKeyFor( segredo.getBytes());
     }
 
-    public boolean validarToken(String token) {
-
-        try {
-            getClaims(token);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-
-    }
-
-    private Claims getClaims(String token) {
-        return Jwts.parser()
-                .verifyWith(getSegredoAssinado())
-                .build()
-                .parseClaimsJws(token)
-                .getPayload();
-    }
-
-
-    public String getUsername(String token) {
-        return getClaims(token).getSubject();
-    }
-
-    public String getRole(String token) {
-        return getClaims(token).get("role", String.class);
-    }
+//    public boolean validarToken(String token) {
+//
+//        try {
+//            getClaims(token);
+//            return true;
+//        } catch (Exception e) {
+//            return false;
+//        }
+//
+//    }
+//
+//    private Claims getClaims(String token) {
+//        return Jwts.parser()
+//                .verifyWith(getSegredoAssinado())
+//                .build()
+//                .parseClaimsJws(token)
+//                .getPayload();
+//    }
+//
+//
+//    public String getUsername(String token) {
+//        return getClaims(token).getSubject();
+//    }
+//
+//    public String getRole(String token) {
+//        return getClaims(token).get("role", String.class);
+//    }
 
     public long getExpiracao() {
         return tempoExpiracao;
