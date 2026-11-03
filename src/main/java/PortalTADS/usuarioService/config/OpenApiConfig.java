@@ -30,15 +30,15 @@ public class OpenApiConfig {
                                 Esta API REST é responsável pelo ecossistema de autenticação, usuários e perfis educacionais do **Portal TADS**.
                                 
                                 ### Módulos e Funcionalidades:
-                                - 🔐 **Autenticação**: Emissão de tokens JWT via login seguro.
-                                - 👤 **Usuários**: CRUD completo de contas de acesso ao sistema com papéis (`ADMIN`, `PROFESSOR`, `COORDENADOR`, `ALUNO`).
-                                - 👨‍🏫 **Professores**: Gestão do corpo docente vinculado a cursos e titulações acadêmicas.
-                                - 🎓 **Alunos**: Cadastro e acompanhamento de discentes vinculados a cursos.
-                                - 📋 **Coordenadores**: Gestão de coordenação de cursos integrada aos professores.
+                                -  **Autenticação**: Emissão de tokens JWT via login seguro.
+                                -  **Usuários**: CRUD completo de contas de acesso ao sistema com papéis (`ADMIN`, `PROFESSOR`, `COORDENADOR`, `ALUNO`).
+                                -  **Professores**: Gestão do corpo docente vinculado a cursos e titulações acadêmicas.
+                                -  **Alunos**: Cadastro e acompanhamento de discentes vinculados a cursos.
+                                -  **Coordenadores**: Gestão de coordenação de cursos integrada aos professores.
                                 
                                 ---
                                 
-                                ### 🔑 Guia de Autenticação
+                                ###  Guia de Autenticação
                                 1. Acesse o endpoint **`POST /auth/login`** com suas credenciais.
                                 2. Copie o token retornado no campo `token`.
                                 3. Clique no botão verde **Authorize** no topo direito do Swagger.
