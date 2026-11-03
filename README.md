@@ -189,17 +189,17 @@ cp .env.example .env
 
 ### Tabela de Parâmetros
 
-| Variável | Valor Padrão | Descrição |
+| Variável | Exemplo / Sugerido | Descrição |
 | --- | --- | --- |
 | `SERVER_PORT` | `8081` | Porta de escuta da aplicação web |
 | `SERVER_CONTEXT_PATH` | `/api/usuarios/` | Prefixo global da API (context path do servlet) |
 | `DB_HOST` | `localhost` | Endereço do servidor PostgreSQL |
 | `DB_PORT` | `5432` | Porta do PostgreSQL |
 | `DB_NAME` | `usuarioDB` | Nome do banco de dados relacional |
-| `DB_USERNAME` | `postgres` | Usuário com permissão no banco |
-| `DB_PASSWORD` | `adm` | Senha de acesso ao banco |
-| `SPRING_DATASOURCE_URL` | *(Montada via DB_HOST/PORT/NAME)* | URL JDBC alternativa completa |
-| `JWT_SECRET` | *(Chave Base64 no properties)* | Segredo de 256 bits para assinatura HMAC-SHA256 |
+| `SPRING_DATASOURCE_USERNAME` | `postgres` | Usuário com permissão no banco |
+| `SPRING_DATASOURCE_PASSWORD` | `adm` | Senha de acesso ao banco |
+| `SPRING_DATASOURCE_URL` | `jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}` | URL JDBC completa de conexão |
+| `JWT_SECRET` | `14I15oujcYSvV7r7Lghmg+HUMJ5n8YXDYmQoyHFiWMA=` | Segredo de 256 bits para assinatura HMAC-SHA256 |
 | `JWT_EXPIRATION` | `36000000` | Validade do token em milissegundos (ex: 36000000 ms = 10h) |
 
 ---
