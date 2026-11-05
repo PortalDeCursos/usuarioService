@@ -2,6 +2,7 @@ package PortalTADS.usuarioService.security;
 
 
 import PortalTADS.usuarioService.enums.roleUsuario;
+import PortalTADS.usuarioService.exception.TokenGeracaoException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -22,8 +23,24 @@ public class tokenProvider {
     private String segredo;
 
     public String gerarToken(Authentication authentication) {
-        userDetails usuario = (userDetails) authentication.getPrincipal();
-        return buildToken(usuario.getUsername(), usuario.getRole());
+        if (authentication == null || authentication.getPrincipal() == null) {
+            throw new TokenGeracaoException("A autenticação e o usuário principal não podem ser nulos");
+        }
+        if (!(authentication.getPrincipal() instanceof userDetails usuario)) {
+            throw new TokenGeracaoException("O principal da autenticação deve ser uma instância de userDetails válida");
+        }
+        if (usuario.getUsername() == null || usuario.getUsername().isBlank()) {
+            throw new TokenGeracaoException("O username/e-mail do usuário não pode ser nulo ou vazio");
+        }
+        if (usuario.getRole() == null || usuario.getRole().isBlank()) {
+            throw new TokenGeracaoException("A role do usuário não pode ser nula ou vazia");
+        }
+
+        try {
+            return buildToken(usuario.getUsername(), usuario.getRole());
+        } catch (Exception e) {
+            throw new TokenGeracaoException("Erro ao construir o token JWT: " + e.getMessage(), e);
+        }
     }
 
 

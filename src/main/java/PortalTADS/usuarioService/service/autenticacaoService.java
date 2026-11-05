@@ -18,16 +18,12 @@ public class autenticacaoService {
     private final AuthenticationManager authenticationManager;
     private final tokenProvider tokenProvider;
 
-    public loginResponseDTO login(loginRequestDTO loginRequestDTO) throws Exception {
-        try {
-            Authentication autenticado = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequestDTO.getEmail(), loginRequestDTO.getSenha()));
-            String token = tokenProvider.gerarToken(autenticado);
-            String role = ((userDetails) autenticado.getPrincipal()).getRole();
-            return new loginResponseDTO(token, tokenProvider.getExpiracao(), role);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new Exception("Erro ao autenticar usuário", e);
-        }
-
+    public loginResponseDTO login(loginRequestDTO loginRequestDTO) {
+        Authentication autenticado = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginRequestDTO.getEmail(), loginRequestDTO.getSenha())
+        );
+        String token = tokenProvider.gerarToken(autenticado);
+        String role = ((userDetails) autenticado.getPrincipal()).getRole();
+        return new loginResponseDTO(token, tokenProvider.getExpiracao(), role);
     }
 }
