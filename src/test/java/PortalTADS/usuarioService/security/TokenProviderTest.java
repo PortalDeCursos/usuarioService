@@ -15,8 +15,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import javax.crypto.SecretKey;
 import java.util.Date;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.*;
 
 class TokenProviderTest {
 
@@ -54,11 +53,11 @@ class TokenProviderTest {
         // 2. Ação: gerar o token JWT
         String token = tokenProvider.gerarToken(authentication);
 
-        // 3. Verificações:
-        // Token não nulo e preenchido
-        assertThat(token).isNotNull().isNotBlank();
+        // 3. Verificações usando asserções nativas do JUnit 5 (Assertions):
+        assertNotNull(token, "O token gerado não deve ser nulo");
+        assertFalse(token.isBlank(), "O token gerado não deve estar vazio");
 
-        // Validar a assinatura criptográfica usando a mesma chave secreta
+        // Validar a assinatura criptográfica usando a chave secreta com o parser do JJWT
         SecretKey secretKey = Keys.hmacShaKeyFor(segredo.getBytes());
 
         Claims claims = assertDoesNotThrow(() ->
@@ -71,12 +70,12 @@ class TokenProviderTest {
         );
 
         // Validar dados contidos no payload (Claims)
-        assertThat(claims.getSubject()).isEqualTo("admin@portaltads.com");
-        assertThat(claims.get("role", String.class)).isEqualTo("ADMIN");
+        assertEquals("admin@portaltads.com", claims.getSubject(), "O subject deve ser o email do admin");
+        assertEquals("ADMIN", claims.get("role", String.class), "A role no token deve ser ADMIN");
 
         // Validar expiração e emissão
-        assertThat(claims.getIssuedAt()).isBeforeOrEqualTo(new Date());
-        assertThat(claims.getExpiration()).isAfter(new Date());
+        Date agora = new Date();
+        assertTrue(claims.getIssuedAt().compareTo(agora) <= 0, "A data de emissão deve ser anterior ou igual ao momento atual");
+        assertTrue(claims.getExpiration().after(agora), "A data de expiração deve ser futura");
     }
 }
-
