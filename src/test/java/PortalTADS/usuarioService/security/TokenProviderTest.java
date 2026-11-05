@@ -1,6 +1,7 @@
 package PortalTADS.usuarioService.security;
 
 import PortalTADS.usuarioService.enums.roleUsuario;
+import PortalTADS.usuarioService.exception.TokenGeracaoException;
 import PortalTADS.usuarioService.model.usuario;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -15,6 +16,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import javax.crypto.SecretKey;
 import java.util.Date;
 
+// Asserções padrão do JUnit 5 Jupiter
 import static org.junit.jupiter.api.Assertions.*;
 
 class TokenProviderTest {
@@ -77,5 +79,64 @@ class TokenProviderTest {
         Date agora = new Date();
         assertTrue(claims.getIssuedAt().compareTo(agora) <= 0, "A data de emissão deve ser anterior ou igual ao momento atual");
         assertTrue(claims.getExpiration().after(agora), "A data de expiração deve ser futura");
+    }
+
+    @Test
+    @DisplayName("Deve lançar TokenGeracaoException quando o objeto Authentication for nulo")
+    void deveLancarExcecaoQuandoAuthenticationForNulo() {
+        TokenGeracaoException exception = assertThrows(
+                TokenGeracaoException.class,
+                () -> tokenProvider.gerarToken(null),
+                "Deve lançar TokenGeracaoException quando authentication for nulo"
+        );
+
+        assertEquals("A autenticação e o usuário principal não podem ser nulos", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Deve lançar TokenGeracaoException quando o principal da autenticação for nulo")
+    void deveLancarExcecaoQuandoPrincipalForNulo() {
+        Authentication authComPrincipalNulo = new UsernamePasswordAuthenticationToken(null, null);
+
+        TokenGeracaoException exception = assertThrows(
+                TokenGeracaoException.class,
+                () -> tokenProvider.gerarToken(authComPrincipalNulo),
+                "Deve lançar TokenGeracaoException quando o principal for nulo"
+        );
+
+        assertEquals("A autenticação e o usuário principal não podem ser nulos", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Deve lançar TokenGeracaoException quando o principal não for uma instância de userDetails")
+    void deveLancarExcecaoQuandoPrincipalForInvalido() {
+        Authentication authInvalida = new UsernamePasswordAuthenticationToken("usuario_invalido", "senha");
+
+        TokenGeracaoException exception = assertThrows(
+                TokenGeracaoException.class,
+                () -> tokenProvider.gerarToken(authInvalida),
+                "Deve lançar TokenGeracaoException quando o principal não for userDetails"
+        );
+
+        assertEquals("O principal da autenticação deve ser uma instância de userDetails válida", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Deve lançar TokenGeracaoException quando o usuário tiver username ou role nulos")
+    void deveLancarExcecaoQuandoDadosDoUsuarioForemInvalidos() {
+        usuario usuarioInvalido = new usuario();
+        usuarioInvalido.setEmail(null);
+        usuarioInvalido.setTipoUsuario(roleUsuario.ALUNO);
+
+        userDetails userDetails = new userDetails(usuarioInvalido);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, "senha");
+
+        TokenGeracaoException exception = assertThrows(
+                TokenGeracaoException.class,
+                () -> tokenProvider.gerarToken(authentication),
+                "Deve lançar TokenGeracaoException quando username for nulo"
+        );
+
+        assertEquals("O username/e-mail do usuário não pode ser nulo ou vazio", exception.getMessage());
     }
 }
