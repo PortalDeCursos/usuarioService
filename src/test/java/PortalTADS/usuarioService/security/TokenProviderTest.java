@@ -139,4 +139,50 @@ class TokenProviderTest {
 
         assertEquals("O username/e-mail do usuário não pode ser nulo ou vazio", exception.getMessage());
     }
+
+    @Test
+    @DisplayName("Deve lançar TokenGeracaoException quando a chave secreta for nula ou vazia")
+    void deveLancarExcecaoQuandoChaveSecretaForNulaOuVazia() {
+        usuario admin = new usuario(1L, "Admin", "admin@portaltads.com", "123456", roleUsuario.ADMIN);
+        userDetails userDetails = new userDetails(admin);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, "123456", userDetails.getAuthorities());
+
+        // Teste com segredo nulo
+        ReflectionTestUtils.setField(tokenProvider, "segredo", null);
+        TokenGeracaoException exNula = assertThrows(
+                TokenGeracaoException.class,
+                () -> tokenProvider.gerarToken(authentication)
+        );
+        assertEquals("A chave secreta (Secret Key) não pode ser nula ou vazia", exNula.getMessage());
+
+        // Teste com segredo vazio / em branco
+        ReflectionTestUtils.setField(tokenProvider, "segredo", "   ");
+        TokenGeracaoException exVazia = assertThrows(
+                TokenGeracaoException.class,
+                () -> tokenProvider.gerarToken(authentication)
+        );
+        assertEquals("A chave secreta (Secret Key) não pode ser nula ou vazia", exVazia.getMessage());
+    }
+
+    @Test
+    @DisplayName("Deve lançar TokenGeracaoException quando a chave secreta for insuficiente ou corrompida")
+    void deveLancarExcecaoQuandoChaveSecretaForInvalidaOuCorrompida() {
+        usuario admin = new usuario(1L, "Admin", "admin@portaltads.com", "123456", roleUsuario.ADMIN);
+        userDetails userDetails = new userDetails(admin);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, "123456", userDetails.getAuthorities());
+
+        // Chave curta demais para HMAC-SHA (menos de 256 bits / 32 bytes)
+        ReflectionTestUtils.setField(tokenProvider, "segredo", "chave_curta_invalida");
+
+        TokenGeracaoException exception = assertThrows(
+                TokenGeracaoException.class,
+                () -> tokenProvider.gerarToken(authentication),
+                "Deve lançar TokenGeracaoException quando a chave for insuficiente para HMAC-SHA"
+        );
+
+        assertTrue(
+                exception.getMessage().contains("A chave secreta fornecida é inválida ou insuficiente para assinatura HMAC-SHA"),
+                "A mensagem deve alertar sobre chave inválida ou insuficiente"
+        );
+    }
 }
