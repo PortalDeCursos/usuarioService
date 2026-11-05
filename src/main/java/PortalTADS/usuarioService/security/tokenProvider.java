@@ -38,6 +38,8 @@ public class tokenProvider {
 
         try {
             return buildToken(usuario.getUsername(), usuario.getRole());
+        } catch (TokenGeracaoException e) {
+            throw e;
         } catch (Exception e) {
             throw new TokenGeracaoException("Erro ao construir o token JWT: " + e.getMessage(), e);
         }
@@ -59,7 +61,14 @@ public class tokenProvider {
     }
 
     private SecretKey getSegredoAssinado() {
-        return Keys.hmacShaKeyFor( segredo.getBytes());
+        if (segredo == null || segredo.isBlank()) {
+            throw new TokenGeracaoException("A chave secreta (Secret Key) não pode ser nula ou vazia");
+        }
+        try {
+            return Keys.hmacShaKeyFor(segredo.getBytes());
+        } catch (Exception e) {
+            throw new TokenGeracaoException("A chave secreta fornecida é inválida ou insuficiente para assinatura HMAC-SHA: " + e.getMessage(), e);
+        }
     }
 
 //    public boolean validarToken(String token) {
