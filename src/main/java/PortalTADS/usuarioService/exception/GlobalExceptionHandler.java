@@ -91,6 +91,66 @@ public class GlobalExceptionHandler {
                 .body(problem);
     }
 
+    @ExceptionHandler(TokenGeracaoException.class)
+    public ResponseEntity<ProblemDetail> handleTokenGeracao(
+            TokenGeracaoException ex,
+            HttpServletRequest request) {
+
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
+                HttpStatus.BAD_REQUEST,
+                ex.getMessage()
+        );
+        problem.setTitle("Erro na geração do token");
+        problem.setProperty("timestamp", LocalDateTime.now());
+        if (request != null && request.getRequestURI() != null) {
+            problem.setInstance(URI.create(request.getRequestURI()));
+        }
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(problem);
+    }
+
+    @ExceptionHandler(TokenInvalidoException.class)
+    public ResponseEntity<ProblemDetail> handleTokenInvalido(
+            TokenInvalidoException ex,
+            HttpServletRequest request) {
+
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
+                HttpStatus.UNAUTHORIZED,
+                ex.getMessage()
+        );
+        problem.setTitle("Token inválido ou expirado");
+        problem.setProperty("timestamp", LocalDateTime.now());
+        if (request != null && request.getRequestURI() != null) {
+            problem.setInstance(URI.create(request.getRequestURI()));
+        }
+
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(problem);
+    }
+
+    @ExceptionHandler(org.springframework.security.authentication.BadCredentialsException.class)
+    public ResponseEntity<ProblemDetail> handleBadCredentials(
+            org.springframework.security.authentication.BadCredentialsException ex,
+            HttpServletRequest request) {
+
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
+                HttpStatus.UNAUTHORIZED,
+                "Credenciais incorretas — e-mail ou senha não conferem"
+        );
+        problem.setTitle("Falha na autenticação");
+        problem.setProperty("timestamp", LocalDateTime.now());
+        if (request != null && request.getRequestURI() != null) {
+            problem.setInstance(URI.create(request.getRequestURI()));
+        }
+
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(problem);
+    }
+
 
 
 }

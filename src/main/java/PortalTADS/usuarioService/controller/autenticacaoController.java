@@ -61,7 +61,7 @@ public class autenticacaoController {
     })
     @SecurityRequirements
     @PostMapping("/login")
-    public ResponseEntity<loginResponseDTO> login(@RequestBody @Valid loginRequestDTO loginRequestDTO) throws Exception {
+    public ResponseEntity<loginResponseDTO> login(@RequestBody @Valid loginRequestDTO loginRequestDTO) {
         loginResponseDTO response = autenticacaoService.login(loginRequestDTO);
         return ResponseEntity.ok(response);
     }
