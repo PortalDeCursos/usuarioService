@@ -1,6 +1,7 @@
 package PortalTADS.usuarioService.service;
 
 import PortalTADS.usuarioService.enums.roleUsuario;
+import PortalTADS.usuarioService.exception.AcessoProibidoException;
 import PortalTADS.usuarioService.exception.EmailDuplicadoException;
 import PortalTADS.usuarioService.exception.UsuarioNaoEncontradoException;
 import PortalTADS.usuarioService.model.dto.usuario.usuarioRequestDTO;
@@ -82,5 +83,24 @@ public class usuarioService {
         return mapper.toResponseList(enitdades);
     }
 
+    public usuarioResponseDTO atualizarPerfilProprio(String subEmail, usuarioRequestDTO record) {
+        usuarioEntity entity = repository.findByEmail(subEmail)
+                .orElseThrow(() -> new UsuarioNaoEncontradoException(subEmail));
+
+        if (!entity.getEmail().equals(subEmail)) {
+            throw new AcessoProibidoException("Você não tem permissão para atualizar este perfil.");
+        }
+
+        if (repository.existsByEmailAndIdNot(record.email(), entity.getId())) {
+            throw new EmailDuplicadoException("Email já cadastrado.");
+        }
+
+        entity.setNome(record.nome());
+        entity.setEmail(record.email());
+        entity.setSenha(passwordEncoder.encode(record.senha()));
+
+        repository.save(entity);
+        return mapper.toResponse(entity);
+    }
 
 }
