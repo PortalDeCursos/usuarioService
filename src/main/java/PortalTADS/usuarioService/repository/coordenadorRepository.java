@@ -27,4 +27,6 @@ public interface coordenadorRepository extends JpaRepository<coordenadorEntity, 
     boolean existsByProfessorIdAndIdNot(Long professorId, Long id);
 
     boolean existsByProfessor_Usuario_Id(Long id);
+
+    java.util.Optional<coordenadorEntity> findByProfessor_Usuario_Email(String email);
 }

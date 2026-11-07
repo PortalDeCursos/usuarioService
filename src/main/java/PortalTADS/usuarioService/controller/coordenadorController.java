@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -201,6 +202,54 @@ public class coordenadorController {
             @RequestBody @Valid coordenadorRequestDTO request
     ) {
         return ResponseEntity.ok(coordenadorService.atualizarCoordenador(id, request));
+    }
+
+    @Operation(
+            summary = "Atualizar perfil do coordenador autenticado",
+            description = """
+                    Atualiza os dados de vínculo de curso do coordenador que está autenticado no momento.
+                    
+                    O coordenador é identificado pelo e-mail presente no token JWT (campo `sub`).
+                    Caso o token pertença a um usuário diferente do perfil a ser atualizado, a requisição
+                    será rejeitada com **403 Forbidden**.
+                    
+                    **Permissão requerida:** Estar autenticado como o próprio coordenador.
+                    """
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Perfil do coordenador atualizado com sucesso",
+                    content = @Content(schema = @Schema(implementation = coordenadorResponseDTO.class))
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Dados inválidos — campos obrigatórios ausentes ou incorretos",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Não autenticado — token JWT ausente ou inválido",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Acesso proibido — o token não pertence a este coordenador",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Coordenador não encontrado para o e-mail autenticado",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))
+            )
+    })
+    @PutMapping("/me")
+    public ResponseEntity<coordenadorResponseDTO> atualizarPerfilProprio(
+            Authentication authentication,
+            @RequestBody @Valid coordenadorRequestDTO request
+    ) {
+        String subEmail = authentication.getName();
+        return ResponseEntity.ok(coordenadorService.atualizarPerfilProprio(subEmail, request));
     }
 
     @Operation(
