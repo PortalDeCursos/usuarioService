@@ -1,5 +1,6 @@
 package PortalTADS.usuarioService.service;
 
+import PortalTADS.usuarioService.exception.AcessoProibidoException;
 import PortalTADS.usuarioService.exception.CoordenadorJaCadastratoException;
 import PortalTADS.usuarioService.exception.UsuarioNaoEncontradoException;
 import PortalTADS.usuarioService.model.coordenador;
@@ -75,6 +76,22 @@ public class coordenadorService {
                 .orElseThrow(() -> new UsuarioNaoEncontradoException(request.professorId()));
 
         entity.setProfessor(professor);
+        entity.setCursoId(request.cursoId());
+
+        coordenadorEntity atualizado = coordenadorRepository.save(entity);
+        return coordenadorMapper.toResponse(atualizado);
+    }
+
+    @Transactional
+    public coordenadorResponseDTO atualizarPerfilProprio(String subEmail, coordenadorRequestDTO request) {
+        coordenadorEntity entity = coordenadorRepository.findByProfessor_Usuario_Email(subEmail)
+                .orElseThrow(() -> new UsuarioNaoEncontradoException(subEmail));
+
+        String emailDoProfessor = entity.getProfessor().getUsuario().getEmail();
+        if (!emailDoProfessor.equals(subEmail)) {
+            throw new AcessoProibidoException("Você não tem permissão para atualizar este perfil.");
+        }
+
         entity.setCursoId(request.cursoId());
 
         coordenadorEntity atualizado = coordenadorRepository.save(entity);

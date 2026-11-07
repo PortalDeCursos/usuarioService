@@ -2,6 +2,7 @@ package PortalTADS.usuarioService.service;
 
 import PortalTADS.usuarioService.enums.roleUsuario;
 import PortalTADS.usuarioService.enums.titulacaoProfessor;
+import PortalTADS.usuarioService.exception.AcessoProibidoException;
 import PortalTADS.usuarioService.exception.EmailDuplicadoException;
 import PortalTADS.usuarioService.exception.UsuarioNaoEncontradoException;
 import PortalTADS.usuarioService.model.dto.professor.professorRequestDTO;
@@ -96,6 +97,37 @@ public class professorService {
 
         professorEntity professorAtualizado = professorRepository.save(entity);
         return professorMapper.toResponse(professorAtualizado);
+    }
+
+    @Transactional
+    public professorResponseDTO atualizarPerfilProprio(String subEmail, professorRequestDTO request) {
+        professorEntity entity = professorRepository.findByUsuario_Email(subEmail)
+                .orElseThrow(() -> new UsuarioNaoEncontradoException(subEmail));
+
+        usuarioEntity usuarioEntity = entity.getUsuario();
+
+        if (!usuarioEntity.getEmail().equals(subEmail)) {
+            throw new AcessoProibidoException("Você não tem permissão para atualizar este perfil.");
+        }
+
+        if (usuarioRepository.existsByEmailAndIdNot(request.usuario().email(), usuarioEntity.getId())) {
+            throw new EmailDuplicadoException("Email já cadastrado.");
+        }
+
+        usuarioEntity.setNome(request.usuario().nome());
+        usuarioEntity.setEmail(request.usuario().email());
+        usuarioEntity.setSenha(passwordEncoder.encode(request.usuario().senha()));
+        usuarioEntity.setTipoUsuario(roleUsuario.PROFESSOR);
+
+        usuarioRepository.save(usuarioEntity);
+
+        entity.setUsuario(usuarioEntity);
+        entity.setCursoId(request.cursoId());
+        entity.setTitulacao(request.titulacao());
+        entity.setDescricao(request.descricao());
+
+        professorEntity atualizado = professorRepository.save(entity);
+        return professorMapper.toResponse(atualizado);
     }
 
     @Transactional

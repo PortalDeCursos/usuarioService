@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -199,6 +200,59 @@ public class professorController {
     ) {
         professorResponseDTO response = professorService.atualizarProfessor(id, request);
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @Operation(
+            summary = "Atualizar perfil do professor autenticado",
+            description = """
+                    Atualiza os dados do perfil do professor que está autenticado no momento.
+                    
+                    O professor é identificado pelo e-mail presente no token JWT (campo `sub`).
+                    Caso o token pertença a um usuário diferente do perfil a ser atualizado, a requisição
+                    será rejeitada com **403 Forbidden**.
+                    
+                    **Permissão requerida:** Estar autenticado como o próprio professor.
+                    """
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Perfil do professor atualizado com sucesso",
+                    content = @Content(schema = @Schema(implementation = professorResponseDTO.class))
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Dados inválidos — campos obrigatórios ausentes ou incorretos",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Não autenticado — token JWT ausente ou inválido",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Acesso proibido — o token não pertence a este professor",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Professor não encontrado para o e-mail autenticado",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "Conflito — e-mail informado já pertence a outro usuário",
+                    content = @Content(schema = @Schema(implementation = ProblemDetail.class))
+            )
+    })
+    @PutMapping("/me")
+    public ResponseEntity<professorResponseDTO> atualizarPerfilProprio(
+            Authentication authentication,
+            @RequestBody @Valid professorRequestDTO request
+    ) {
+        String subEmail = authentication.getName();
+        return ResponseEntity.ok(professorService.atualizarPerfilProprio(subEmail, request));
     }
 
     @Operation(

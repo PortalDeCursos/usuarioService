@@ -1,6 +1,7 @@
 package PortalTADS.usuarioService.service;
 
 import PortalTADS.usuarioService.enums.roleUsuario;
+import PortalTADS.usuarioService.exception.AcessoProibidoException;
 import PortalTADS.usuarioService.exception.EmailDuplicadoException;
 import PortalTADS.usuarioService.exception.UsuarioNaoEncontradoException;
 import PortalTADS.usuarioService.model.aluno;
@@ -87,6 +88,35 @@ public class alunoService {
         usuarioEntity usuarioAtualizado = usuarioRepository.save(usuarioEntity);
 
         entity.setUsuario(usuarioAtualizado);
+        entity.setCursoId(request.cursoId());
+
+        alunoEntity atualizado = alunoRepository.save(entity);
+        return alunoMapper.toResponse(atualizado);
+    }
+
+    @Transactional
+    public alunoResponseDTO atualizarPerfilProprio(String subEmail, alunoRequestDTO request) {
+        alunoEntity entity = alunoRepository.findByUsuario_Email(subEmail)
+                .orElseThrow(() -> new UsuarioNaoEncontradoException(subEmail));
+
+        usuarioEntity usuarioEntity = entity.getUsuario();
+
+        if (!usuarioEntity.getEmail().equals(subEmail)) {
+            throw new AcessoProibidoException("Você não tem permissão para atualizar este perfil.");
+        }
+
+        if (usuarioRepository.existsByEmailAndIdNot(request.usuario().email(), usuarioEntity.getId())) {
+            throw new EmailDuplicadoException("Email já cadastrado.");
+        }
+
+        usuarioEntity.setNome(request.usuario().nome());
+        usuarioEntity.setEmail(request.usuario().email());
+        usuarioEntity.setSenha(passwordEncoder.encode(request.usuario().senha()));
+        usuarioEntity.setTipoUsuario(roleUsuario.ALUNO);
+
+        usuarioRepository.save(usuarioEntity);
+
+        entity.setUsuario(usuarioEntity);
         entity.setCursoId(request.cursoId());
 
         alunoEntity atualizado = alunoRepository.save(entity);
