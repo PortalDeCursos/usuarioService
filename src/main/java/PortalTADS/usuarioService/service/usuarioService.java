@@ -71,16 +71,16 @@ public class usuarioService {
     }
 
     public List<usuarioResponseDTO> listarUsuarios() {
-        List<usuarioEntity> enitdades = repository.findAll();
+        List<usuarioEntity> entidades = repository.findAll();
 
-        List<usuarioResponseDTO> listaUsuarios = mapper.toResponseList(enitdades);
+        List<usuarioResponseDTO> listaUsuarios = mapper.toResponseList(entidades);
         return listaUsuarios;
     }
 
 
     public List<usuarioResponseDTO> buscarUsuariosPorNome(String nome) {
-        List<usuarioEntity> enitdades = repository.findByNomeContainingIgnoreCase(nome);
-        return mapper.toResponseList(enitdades);
+        List<usuarioEntity> entidades = repository.findByNomeContainingIgnoreCase(nome);
+        return mapper.toResponseList(entidades);
     }
 
     public usuarioResponseDTO atualizarPerfilProprio(String subEmail, usuarioRequestDTO record) {

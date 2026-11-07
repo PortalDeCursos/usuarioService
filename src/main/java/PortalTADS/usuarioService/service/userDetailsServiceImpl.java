@@ -1,5 +1,6 @@
 package PortalTADS.usuarioService.service;
 
+import PortalTADS.usuarioService.exception.UsuarioNaoEncontradoException;
 import PortalTADS.usuarioService.model.mapper.usuarioMapper;
 import PortalTADS.usuarioService.repository.entity.usuarioEntity;
 import PortalTADS.usuarioService.repository.usuarioRepository;
@@ -19,11 +20,11 @@ public class userDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username)
-            throws UsernameNotFoundException {
+            throws UsuarioNaoEncontradoException {
 
         usuarioEntity usuario = usuarioRepository.findByEmail(username)
                 .orElseThrow(() ->
-                        new UsernameNotFoundException("Usuário não encontrado")
+                        new UsuarioNaoEncontradoException("Usuário não encontrado")
                 );
 
         return new userDetails(usuarioMapper.toModel(usuario));
