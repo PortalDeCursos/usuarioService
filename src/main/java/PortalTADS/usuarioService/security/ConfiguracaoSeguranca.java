@@ -1,14 +1,12 @@
 package PortalTADS.usuarioService.security;
 
 import lombok.AllArgsConstructor;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -19,12 +17,10 @@ import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-//@EnableMethodSecurity
 @AllArgsConstructor
 public class ConfiguracaoSeguranca {
 
-//    private final filtroJwtAutenticacao filtroJwtAutenticacao;
-
+    private final filtroJwtAutenticacao filtroJwtAutenticacao;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -48,25 +44,25 @@ public class ConfiguracaoSeguranca {
                                 "/v3/api-docs/**"
                         ).permitAll()
                         .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/usuarios").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/admin").permitAll()
                         .requestMatchers(HttpMethod.POST, "/alunos", "/alunos/").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/alunos/me", "/professores/me", "/coordenadores/me", "/admin/me").authenticated()
                         .anyRequest().permitAll()
                 )
-//                .addFilterBefore(
-//                        filtroJwtAutenticacao,
-//                        UsernamePasswordAuthenticationFilter.class
-//                )
+                .addFilterBefore(
+                        filtroJwtAutenticacao,
+                        UsernamePasswordAuthenticationFilter.class
+                )
                 .build();
     }
 
-
     @Bean
-    public PasswordEncoder passwordEncoder(){
-        return  new BCryptPasswordEncoder();
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) {
-        return configuration.getAuthenticationManager();
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }
