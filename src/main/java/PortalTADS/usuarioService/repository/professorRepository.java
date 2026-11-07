@@ -29,4 +29,6 @@ public interface professorRepository extends JpaRepository<professorEntity, Long
     boolean existsByUsuario_Id(Long id);
 
     Optional<professorEntity> findByUsuario_Id(Long id);
+
+    Optional<professorEntity> findByUsuario_Email(String email);
 }
