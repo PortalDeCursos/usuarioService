@@ -1,6 +1,5 @@
 package PortalTADS.usuarioService.exception;
 
-
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
@@ -36,7 +35,7 @@ public class GlobalExceptionHandler {
         return erros;
     }
 
-    @ExceptionHandler (Exception.class)
+    @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ProblemDetail handleException(Exception ex) {
         ProblemDetail pd = ProblemDetail.forStatus(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -61,16 +60,15 @@ public class GlobalExceptionHandler {
         problem.setDetail(ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(problem);
     }
+
     @ExceptionHandler(CoordenadorJaCadastratoException.class)
     public ResponseEntity<ProblemDetail> handleCoordenadorJaCadastrato(CoordenadorJaCadastratoException ex) {
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
         problem.setTitle("Coordenador já cadastrado");
         problem.setProperty("timestamp", LocalDateTime.now());
-//        problem.setDetail(ex.getMessage());
+        // problem.setDetail(ex.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(problem);
     }
-
-
 
     // para valores inválidos no corpo da requisição
     @ExceptionHandler(HttpMessageNotReadableException.class)
@@ -80,8 +78,7 @@ public class GlobalExceptionHandler {
 
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(
                 HttpStatus.BAD_REQUEST,
-                "O corpo da requisição contém um valor inválido ou mal formatado."
-        );
+                "O corpo da requisição contém um valor inválido ou mal formatado.");
 
         problem.setTitle("Requisição inválida");
         problem.setInstance(URI.create(request.getRequestURI()));
@@ -98,8 +95,7 @@ public class GlobalExceptionHandler {
 
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(
                 HttpStatus.BAD_REQUEST,
-                ex.getMessage()
-        );
+                ex.getMessage());
         problem.setTitle("Erro na geração do token");
         problem.setProperty("timestamp", LocalDateTime.now());
         if (request != null && request.getRequestURI() != null) {
@@ -118,8 +114,7 @@ public class GlobalExceptionHandler {
 
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(
                 HttpStatus.UNAUTHORIZED,
-                ex.getMessage()
-        );
+                ex.getMessage());
         problem.setTitle("Token inválido ou expirado");
         problem.setProperty("timestamp", LocalDateTime.now());
         if (request != null && request.getRequestURI() != null) {
@@ -131,6 +126,25 @@ public class GlobalExceptionHandler {
                 .body(problem);
     }
 
+    @ExceptionHandler(AcessoProibidoException.class)
+    public ResponseEntity<ProblemDetail> handleAcessoProibido(
+            AcessoProibidoException ex,
+            HttpServletRequest request) {
+
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
+                HttpStatus.FORBIDDEN,
+                ex.getMessage());
+        problem.setTitle("Acesso proibido");
+        problem.setProperty("timestamp", LocalDateTime.now());
+        if (request != null && request.getRequestURI() != null) {
+            problem.setInstance(URI.create(request.getRequestURI()));
+        }
+
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(problem);
+    }
+
     @ExceptionHandler(org.springframework.security.authentication.BadCredentialsException.class)
     public ResponseEntity<ProblemDetail> handleBadCredentials(
             org.springframework.security.authentication.BadCredentialsException ex,
@@ -138,8 +152,7 @@ public class GlobalExceptionHandler {
 
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(
                 HttpStatus.UNAUTHORIZED,
-                "Credenciais incorretas — e-mail ou senha não conferem"
-        );
+                "Credenciais incorretas — e-mail ou senha não conferem");
         problem.setTitle("Falha na autenticação");
         problem.setProperty("timestamp", LocalDateTime.now());
         if (request != null && request.getRequestURI() != null) {
@@ -150,7 +163,5 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.UNAUTHORIZED)
                 .body(problem);
     }
-
-
 
 }
