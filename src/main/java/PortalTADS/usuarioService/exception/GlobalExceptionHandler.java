@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -19,13 +21,21 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ProblemDetail handleValidation(MethodArgumentNotValidException ex) {
-        var pd = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Erro de validação");
-        pd.setProperty("errors", extrairErros(ex));
-        return pd;
-    }
+//    @ResponseStatus(HttpStatus.BAD_REQUEST)
+//    @ExceptionHandler(MethodArgumentNotValidException.class)
+//    public ProblemDetail handleValidation(MethodArgumentNotValidException ex) {
+//        var pd = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Erro de validação");
+//        pd.setProperty("errors", extrairErros(ex));
+//        return pd;
+//    }
+//
+//    private Map<String, String> extrairErros(MethodArgumentNotValidException ex) {
+//        Map<String, String> erros = new HashMap<>();
+//        for (FieldError fieldError : ex.getBindingResult().getFieldErrors()) {
+//            erros.put(fieldError.getField(), fieldError.getDefaultMessage());
+//        }
+//        return erros;
+//    }
 
     private Map<String, String> extrairErros(MethodArgumentNotValidException ex) {
         Map<String, String> erros = new HashMap<>();
@@ -145,9 +155,9 @@ public class GlobalExceptionHandler {
                 .body(problem);
     }
 
-    @ExceptionHandler(org.springframework.security.authentication.BadCredentialsException.class)
+    @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ProblemDetail> handleBadCredentials(
-            org.springframework.security.authentication.BadCredentialsException ex,
+            BadCredentialsException ex,
             HttpServletRequest request) {
 
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(

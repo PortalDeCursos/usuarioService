@@ -20,11 +20,11 @@ public class userDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username)
-            throws UsuarioNaoEncontradoException {
+            throws UsernameNotFoundException {
 
         usuarioEntity usuario = usuarioRepository.findByEmail(username)
                 .orElseThrow(() ->
-                        new UsuarioNaoEncontradoException("Usuário não encontrado")
+                        new UsernameNotFoundException(username)
                 );
 
         return new userDetails(usuarioMapper.toModel(usuario));
