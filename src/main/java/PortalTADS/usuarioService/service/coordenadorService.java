@@ -1,5 +1,6 @@
 package PortalTADS.usuarioService.service;
 
+import PortalTADS.usuarioService.client.cursoClient;
 import PortalTADS.usuarioService.exception.AcessoProibidoException;
 import PortalTADS.usuarioService.exception.CoordenadorJaCadastratoException;
 import PortalTADS.usuarioService.exception.UsuarioNaoEncontradoException;
@@ -24,16 +25,17 @@ public class coordenadorService {
     private final coordenadorRepository coordenadorRepository;
     private final professorRepository professorRepository;
     private final coordenadorMapper coordenadorMapper;
+    private final cursoClient cursoClient;
 
     @Transactional
     public coordenadorResponseDTO criarCoordenador(coordenadorRequestDTO request) {
 
-
-
         if (coordenadorRepository.existsByProfessorId(request.professorId())) {
             throw new CoordenadorJaCadastratoException(request.professorId());
         }
-
+        if (!cursoClient.existeCurso(request.cursoId())) {
+            throw new IllegalArgumentException("Curso não encontrado.");
+        }
         coordenador coordenadorModel = coordenadorMapper.toModel(request);
 
         professorEntity professor = professorRepository.findById(request.professorId())
@@ -71,7 +73,9 @@ public class coordenadorService {
         if (coordenadorRepository.existsByProfessorIdAndIdNot(request.professorId(), id)) {
             throw new CoordenadorJaCadastratoException(id);
         }
-
+        if (!cursoClient.existeCurso(request.cursoId())) {
+            throw new IllegalArgumentException("Curso não encontrado.");
+        }
         professorEntity professor = professorRepository.findById(request.professorId())
                 .orElseThrow(() -> new UsuarioNaoEncontradoException(request.professorId()));
 
@@ -90,6 +94,9 @@ public class coordenadorService {
         String emailDoProfessor = entity.getProfessor().getUsuario().getEmail();
         if (!emailDoProfessor.equals(subEmail)) {
             throw new AcessoProibidoException("Você não tem permissão para atualizar este perfil.");
+        }
+        if (!cursoClient.existeCurso(request.cursoId())) {
+            throw new IllegalArgumentException("Curso não encontrado.");
         }
 
         entity.setCursoId(request.cursoId());

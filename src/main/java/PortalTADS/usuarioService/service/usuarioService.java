@@ -29,6 +29,7 @@ public class usuarioService {
             throw new EmailDuplicadoException("Email já cadastrado.");
         }
 
+
         usuario usuarioModel = mapper.toModel(record);
         usuarioModel.setTipoUsuario(roleUsuario.ADMIN);
         usuarioModel.setSenha(passwordEncoder.encode(usuarioModel.getSenha()));

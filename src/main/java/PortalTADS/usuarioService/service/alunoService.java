@@ -1,5 +1,6 @@
 package PortalTADS.usuarioService.service;
 
+import PortalTADS.usuarioService.client.cursoClient;
 import PortalTADS.usuarioService.enums.roleUsuario;
 import PortalTADS.usuarioService.exception.AcessoProibidoException;
 import PortalTADS.usuarioService.exception.EmailDuplicadoException;
@@ -30,6 +31,7 @@ public class alunoService {
     private final alunoMapper alunoMapper;
     private final usuarioMapper usuarioMapper;
     private final PasswordEncoder passwordEncoder;
+    private final cursoClient cursoClient;
 
     @Transactional
     public alunoResponseDTO criarAluno(alunoRequestDTO request) {
@@ -38,6 +40,9 @@ public class alunoService {
 
         if (usuarioRepository.existsByEmail(usuarioModel.getEmail())) {
             throw new EmailDuplicadoException("Email já cadastrado.");
+        }
+        if (!cursoClient.existeCurso(alunoModel.getCursoId())) {
+            throw new IllegalArgumentException("Curso não encontrado.");
         }
 
         usuarioModel.setTipoUsuario(roleUsuario.ALUNO);
@@ -80,6 +85,10 @@ public class alunoService {
             throw new EmailDuplicadoException("Email já cadastrado.");
         }
 
+        if(!cursoClient.existeCurso(request.cursoId())) {
+            throw new IllegalArgumentException("Curso não encontrado.");
+        }
+
         usuarioEntity.setNome(request.usuario().nome());
         usuarioEntity.setEmail(request.usuario().email());
         usuarioEntity.setSenha(passwordEncoder.encode(request.usuario().senha()));
@@ -107,6 +116,10 @@ public class alunoService {
 
         if (usuarioRepository.existsByEmailAndIdNot(request.usuario().email(), usuarioEntity.getId())) {
             throw new EmailDuplicadoException("Email já cadastrado.");
+        }
+
+        if(!cursoClient.existeCurso(request.cursoId())) {
+            throw new IllegalArgumentException("Curso não encontrado.");
         }
 
         usuarioEntity.setNome(request.usuario().nome());
