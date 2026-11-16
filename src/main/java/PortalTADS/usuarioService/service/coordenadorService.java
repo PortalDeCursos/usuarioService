@@ -33,9 +33,7 @@ public class coordenadorService {
         if (coordenadorRepository.existsByProfessorId(request.professorId())) {
             throw new CoordenadorJaCadastratoException(request.professorId());
         }
-        if (!cursoClient.existeCurso(request.cursoId())) {
-            throw new IllegalArgumentException("Curso não encontrado.");
-        }
+        cursoClient.existeCurso(request.cursoId());
         coordenador coordenadorModel = coordenadorMapper.toModel(request);
 
         professorEntity professor = professorRepository.findById(request.professorId())
@@ -73,9 +71,7 @@ public class coordenadorService {
         if (coordenadorRepository.existsByProfessorIdAndIdNot(request.professorId(), id)) {
             throw new CoordenadorJaCadastratoException(id);
         }
-        if (!cursoClient.existeCurso(request.cursoId())) {
-            throw new IllegalArgumentException("Curso não encontrado.");
-        }
+        cursoClient.existeCurso(request.cursoId());
         professorEntity professor = professorRepository.findById(request.professorId())
                 .orElseThrow(() -> new UsuarioNaoEncontradoException(request.professorId()));
 
@@ -95,9 +91,7 @@ public class coordenadorService {
         if (!emailDoProfessor.equals(subEmail)) {
             throw new AcessoProibidoException("Você não tem permissão para atualizar este perfil.");
         }
-        if (!cursoClient.existeCurso(request.cursoId())) {
-            throw new IllegalArgumentException("Curso não encontrado.");
-        }
+        cursoClient.existeCurso(request.cursoId());
 
         entity.setCursoId(request.cursoId());
 

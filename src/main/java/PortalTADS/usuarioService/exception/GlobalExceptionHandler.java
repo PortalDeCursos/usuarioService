@@ -174,4 +174,80 @@ public class GlobalExceptionHandler {
                 .body(problem);
     }
 
+    @ExceptionHandler(CursoNaoEncontradoException.class)
+    public ResponseEntity<ProblemDetail> handleCursoNaoEncontrado(
+            CursoNaoEncontradoException ex,
+            HttpServletRequest request) {
+
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
+                HttpStatus.UNPROCESSABLE_ENTITY,
+                ex.getMessage());
+        problem.setTitle("Curso não encontrado");
+        problem.setProperty("timestamp", LocalDateTime.now());
+        if (request != null && request.getRequestURI() != null) {
+            problem.setInstance(URI.create(request.getRequestURI()));
+        }
+
+        return ResponseEntity
+                .status(HttpStatus.UNPROCESSABLE_ENTITY)
+                .body(problem);
+    }
+
+    @ExceptionHandler(ServicoCursoIndisponivelException.class)
+    public ResponseEntity<ProblemDetail> handleServicoCursoIndisponivel(
+            ServicoCursoIndisponivelException ex,
+            HttpServletRequest request) {
+
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
+                HttpStatus.SERVICE_UNAVAILABLE,
+                ex.getMessage());
+        problem.setTitle("Serviço indisponível");
+        problem.setProperty("timestamp", LocalDateTime.now());
+        if (request != null && request.getRequestURI() != null) {
+            problem.setInstance(URI.create(request.getRequestURI()));
+        }
+
+        return ResponseEntity
+                .status(HttpStatus.SERVICE_UNAVAILABLE)
+                .body(problem);
+    }
+
+    @ExceptionHandler(TimeoutIntegracaoException.class)
+    public ResponseEntity<ProblemDetail> handleTimeoutIntegracao(
+            TimeoutIntegracaoException ex,
+            HttpServletRequest request) {
+
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
+                HttpStatus.GATEWAY_TIMEOUT,
+                ex.getMessage());
+        problem.setTitle("Tempo limite excedido");
+        problem.setProperty("timestamp", LocalDateTime.now());
+        if (request != null && request.getRequestURI() != null) {
+            problem.setInstance(URI.create(request.getRequestURI()));
+        }
+
+        return ResponseEntity
+                .status(HttpStatus.GATEWAY_TIMEOUT)
+                .body(problem);
+    }
+
+    @ExceptionHandler(ErroIntegracaoException.class)
+    public ResponseEntity<ProblemDetail> handleErroIntegracao(
+            ErroIntegracaoException ex,
+            HttpServletRequest request) {
+
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
+                HttpStatus.BAD_GATEWAY,
+                ex.getMessage());
+        problem.setTitle("Erro de integração");
+        problem.setProperty("timestamp", LocalDateTime.now());
+        if (request != null && request.getRequestURI() != null) {
+            problem.setInstance(URI.create(request.getRequestURI()));
+        }
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_GATEWAY)
+                .body(problem);
+    }
+
 }

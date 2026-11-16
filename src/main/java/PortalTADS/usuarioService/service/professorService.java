@@ -1,6 +1,5 @@
 package PortalTADS.usuarioService.service;
 
-
 import PortalTADS.usuarioService.client.cursoClient;
 import PortalTADS.usuarioService.enums.roleUsuario;
 import PortalTADS.usuarioService.enums.titulacaoProfessor;
@@ -44,9 +43,7 @@ public class professorService {
         if (usuarioRepository.existsByEmail(usuarioModel.getEmail())) {
             throw new EmailDuplicadoException("Email já cadastrado.");
         }
-        if (!cursoClient.existeCurso(professorRequestDTO.cursoId())) {
-            throw new IllegalArgumentException("Curso não encontrado.");
-        }
+        cursoClient.existeCurso(professorRequestDTO.cursoId());
 
         usuarioModel.setTipoUsuario(roleUsuario.PROFESSOR);
         usuarioModel.setSenha(passwordEncoder.encode(usuarioModel.getSenha()));
@@ -59,8 +56,8 @@ public class professorService {
     }
 
     public professorResponseDTO buscarProfessorPorId(Long id) {
-        professorEntity entity = professorRepository.findById(id).orElseThrow(() ->
-                new UsuarioNaoEncontradoException(id));
+        professorEntity entity = professorRepository.findById(id)
+                .orElseThrow(() -> new UsuarioNaoEncontradoException(id));
         return professorMapper.toResponse(entity);
     }
 
@@ -88,9 +85,7 @@ public class professorService {
         if (usuarioRepository.existsByEmailAndIdNot(professorRequestDTO.usuario().email(), usuarioEntity.getId())) {
             throw new EmailDuplicadoException("Email já cadastrado.");
         }
-        if (!cursoClient.existeCurso(professorRequestDTO.cursoId())) {
-            throw new IllegalArgumentException("Curso não encontrado.");
-        }
+        cursoClient.existeCurso(professorRequestDTO.cursoId());
 
         usuarioEntity.setNome(professorRequestDTO.usuario().nome());
         usuarioEntity.setEmail(professorRequestDTO.usuario().email());
@@ -122,9 +117,7 @@ public class professorService {
         if (usuarioRepository.existsByEmailAndIdNot(request.usuario().email(), usuarioEntity.getId())) {
             throw new EmailDuplicadoException("Email já cadastrado.");
         }
-        if (!cursoClient.existeCurso(request.cursoId())) {
-            throw new IllegalArgumentException("Curso não encontrado.");
-        }
+        cursoClient.existeCurso(request.cursoId());
 
         usuarioEntity.setNome(request.usuario().nome());
         usuarioEntity.setEmail(request.usuario().email());

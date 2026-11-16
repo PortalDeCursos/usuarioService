@@ -41,9 +41,7 @@ public class alunoService {
         if (usuarioRepository.existsByEmail(usuarioModel.getEmail())) {
             throw new EmailDuplicadoException("Email já cadastrado.");
         }
-        if (!cursoClient.existeCurso(alunoModel.getCursoId())) {
-            throw new IllegalArgumentException("Curso não encontrado.");
-        }
+        cursoClient.existeCurso(alunoModel.getCursoId());
 
         usuarioModel.setTipoUsuario(roleUsuario.ALUNO);
         usuarioModel.setSenha(passwordEncoder.encode(usuarioModel.getSenha()));
@@ -85,9 +83,7 @@ public class alunoService {
             throw new EmailDuplicadoException("Email já cadastrado.");
         }
 
-        if(!cursoClient.existeCurso(request.cursoId())) {
-            throw new IllegalArgumentException("Curso não encontrado.");
-        }
+        cursoClient.existeCurso(request.cursoId());
 
         usuarioEntity.setNome(request.usuario().nome());
         usuarioEntity.setEmail(request.usuario().email());
@@ -118,9 +114,7 @@ public class alunoService {
             throw new EmailDuplicadoException("Email já cadastrado.");
         }
 
-        if(!cursoClient.existeCurso(request.cursoId())) {
-            throw new IllegalArgumentException("Curso não encontrado.");
-        }
+        cursoClient.existeCurso(request.cursoId());
 
         usuarioEntity.setNome(request.usuario().nome());
         usuarioEntity.setEmail(request.usuario().email());
