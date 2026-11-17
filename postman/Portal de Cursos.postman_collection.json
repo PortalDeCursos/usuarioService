@@ -1,0 +1,993 @@
+{
+  "info": {
+    "_postman_id": "26fb75dc-a684-4ccf-9e63-43f6d0b75712",
+    "name": "Portal de Cursos",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "48459201"
+  },
+  "item": [
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "salvaUsuario",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_adm}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "// {\r\n//   \"nome\": \"{{$randomFirstName}} {{$randomLastName}}\",\r\n//   \"email\": \"aluno@email.com\",\r\n//   \"senha\": \"suasenha\",\r\n//     \"username\": \"{{$randomUserName}}\"\r\n// }\r\n\r\n\r\n{\r\n  \"nome\": \"{{$randomFirstName}} {{$randomLastName}}\",\r\n  \"email\": \"{{$randomEmail}}\",\r\n  \"senha\": \"suasenha\",\r\n    \"username\": \"{{$randomUserName}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "buscar usuário id",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_adm}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "atualizar usuário",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_adm}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nome\": \"{{$randomFirstName}} {{$randomLastName}}\",\r\n  \"email\": \"{{$randomExampleEmail}}\",\r\n  \"senha\": \"{{$randomPassword}}\",\r\n  \"username\": \"{{$randomUserName}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/4",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "4"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "buscar",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_adm}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/admin/buscar?nome=jo",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "buscar"
+              ],
+              "query": [
+                {
+                  "key": "nome",
+                  "value": "jo"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "professor",
+      "item": [
+        {
+          "name": "criar Professor",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_adm}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "// {\r\n//     \"usuario\": {\r\n//         \"nome\": \"{{$randomFirstName}} {{$randomLastName}}\",\r\n//         \"email\": \"professor@email.com\",\r\n//         \"senha\": \"suasenha\"\r\n//     },\r\n//     \"cursoId\": 1,\r\n//     \"titulacao\": \"DOUTORADO\",\r\n//     \"descricao\": \"Professor da área de desenvolvimento de sistemas\"\r\n// }\r\n{\r\n  \"usuario\": {\r\n    \"nome\": \"{{$randomFirstName}} {{$randomLastName}}\",\r\n    \"email\": \"{{$randomEmail}}\",\r\n    \"senha\": \"{{$randomPassword}}\"\r\n  },\r\n  \"cursoId\": 1,\r\n  \"titulacao\": \"DOUTORADO\",\r\n  \"descricao\": \"Professor da área de desenvolvimento de sistemas\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/professores",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "professores"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "buscar por id",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_adm}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"usuario\": {\r\n    \"nome\": \"{{$randomFirstName}} {{$randomLastName}}\",\r\n    \"email\": \"{{$randomExampleEmail}}\",\r\n    \"senha\": \"{{$randomPassword}}\",\r\n    \"username\": \"{{$randomUserName}}\"\r\n  },\r\n  \"cursoId\": 1,\r\n  \"titulacao\": \"MESTRADO\",\r\n  \"descricao\": \"Professor da área de desenvolvimento de sistemas\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/professores/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "professores",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "busca",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_aluno}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"usuario\": {\r\n    \"nome\": \"{{$randomFirstName}} {{$randomLastName}}\",\r\n    \"email\": \"{{$randomExampleEmail}}\",\r\n    \"senha\": \"{{$randomPassword}}\",\r\n    \"username\": \"{{$randomUserName}}\"\r\n  },\r\n  \"cursoId\": 1,\r\n  \"titulacao\": \"MESTRADO\",\r\n  \"descricao\": \"Professor da área de desenvolvimento de sistemas\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/professores/buscar",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "professores",
+                "buscar"
+              ],
+              "query": [
+                {
+                  "key": "nome",
+                  "value": "sai",
+                  "disabled": true
+                },
+                {
+                  "key": "titulacao",
+                  "value": "DOUTORADO",
+                  "disabled": true
+                },
+                {
+                  "key": "teste",
+                  "value": "akiduro",
+                  "type": "text",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "atualizar",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_professor}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"usuario\": {\r\n    \"nome\": \"{{$randomFirstName}} {{$randomLastName}}\",\r\n    \"email\": \"{{$randomExampleEmail}}\",\r\n    \"senha\": \"{{$randomPassword}}\",\r\n    \"username\": \"{{$randomUserName}}\"\r\n  },\r\n  \"cursoId\": 1,\r\n  \"titulacao\": \"DOUTORADO\",\r\n  \"descricao\": \"Professor da área de desenvolvimento de sistemas\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/professores/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "professores",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "deletar",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_adm}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/professores/34",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "professores",
+                "34"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "aluno",
+      "item": [
+        {
+          "name": "criar aluno",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"usuario\": {\r\n        \"nome\": \"{{$randomFullName}}\",\r\n        \"email\": \"{{$randomEmail}}\",\r\n        \"senha\": \"{{$randomPassword}}\"\r\n    },\r\n    \"cursoId\": 1\r\n}\r\n\r\n\r\n// {\r\n//     \"usuario\": {\r\n//         \"nome\": \"{{$randomFullName}}\",\r\n//         \"email\": \"aluno@email.com\",\r\n//         \"senha\": \"suasenha\"\r\n//     },\r\n//     \"cursoId\": 1\r\n// }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/alunos",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "alunos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "atualizar aluno",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_aluno}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"usuario\": {\r\n        \"nome\": \"{{$randomFullName}}\",\r\n        \"email\": \"{{$randomEmail}}\",\r\n        \"senha\": \"{{$randomPassword}}\"\r\n    },\r\n    \"cursoId\": 1\r\n}\r\n\r\n\r\n// {\r\n//     \"usuario\": {\r\n//         \"nome\": \"{{$randomFullName}}\",\r\n//         \"email\": \"aluno@email.com\",\r\n//         \"senha\": \"suasenha\"\r\n//     },\r\n//     \"cursoId\": 1\r\n// }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/alunos/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "alunos",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "buscar por id",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_aluno}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "// {\r\n//   \"nome\": \"{{$randomFirstName}} {{$randomLastName}}\",\r\n//   \"email\": \"aluno@email.com\",\r\n//   \"senha\": \"suasenha\",\r\n//     \"username\": \"{{$randomUserName}}\"\r\n// }\r\n\r\n\r\n{\r\n  \"nome\": \"{{$randomFirstName}} {{$randomLastName}}\",\r\n  \"email\": \"{{$randomEmail}}\",\r\n  \"senha\": \"suasenha\",\r\n    \"username\": \"{{$randomUserName}}\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "text"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/alunos/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "alunos",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "buscar",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_aluno}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/alunos/buscar",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "alunos",
+                "buscar"
+              ],
+              "query": [
+                {
+                  "key": "nome",
+                  "value": "Molly",
+                  "disabled": true
+                },
+                {
+                  "key": "cursoId",
+                  "value": "",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "deletar aluno",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_aluno}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/alunos/8",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "alunos",
+                "8"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "login",
+      "item": [
+        {
+          "name": "login Coordenador",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\npm.environment.set(\"token_coordenador\", response.token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"coordenador@portaltads.com\",\r\n    \"senha\": \"suasenha\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "login ADM",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();",
+                  "pm.environment.set(\"token_adm\", response.token);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"email\": \"admin@portaltads.com\", \"senha\": \"suasenha\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Generated from cURL: curl -X POST http://localhost:8080/auth/login -H \"Content-Type: application/json\" -d '{\"email\": \"admin@portaltads.com\", \"senha\": \"suasenha\"}'"
+          },
+          "response": []
+        },
+        {
+          "name": "login Aluno",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\npm.environment.set(\"token_aluno\", response.token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"email\": \"aluno@portaltads.com\", \"senha\": \"suasenha\"}   ",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Generated from cURL: curl -X POST http://localhost:8080/auth/login -H \"Content-Type: application/json\" -d '{\"email\": \"aluno@email.com\", \"senha\": \"suasenha\"}'"
+          },
+          "response": []
+        },
+        {
+          "name": "login Professor",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const response = pm.response.json();\npm.environment.set(\"token_professor\", response.token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"email\": \"professor@portaltads.com\", \"senha\": \"suasenha\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Generated from cURL: curl -X POST http://localhost:8080/auth/login -H \"Content-Type: application/json\" -d '{\"email\": \"professor@email.com\", \"senha\": \"suasenha\"}'"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Coordenador",
+      "item": [
+        {
+          "name": "criar corrdenador",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_adm}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"professorId\": 1,\r\n    \"cursoId\": 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/coordenadores",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "coordenadores"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Buscar por id",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_adm}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/coordenadores/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "coordenadores",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "buscar por filtros",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_adm}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/coordenadores/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "coordenadores",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "atualizar coordenador",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_adm}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"professorId\": 1,\r\n    \"cursoId\": 2\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/coordenadores/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "coordenadores",
+                "1"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "atualizar coordenador",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"professorId\": 1,\r\n    \"cursoId\": 2\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/coordenadores/1",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "coordenadores",
+                    "1"
+                  ]
+                }
+              },
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "x-content-type-options",
+                  "value": "nosniff"
+                },
+                {
+                  "key": "x-xss-protection",
+                  "value": "0"
+                },
+                {
+                  "key": "cache-control",
+                  "value": "no-cache, no-store, max-age=0, must-revalidate"
+                },
+                {
+                  "key": "pragma",
+                  "value": "no-cache"
+                },
+                {
+                  "key": "expires",
+                  "value": "0"
+                },
+                {
+                  "key": "x-frame-options",
+                  "value": "DENY"
+                },
+                {
+                  "key": "content-type",
+                  "value": "application/json"
+                },
+                {
+                  "key": "transfer-encoding",
+                  "value": "chunked"
+                },
+                {
+                  "key": "date",
+                  "value": "Wed, 21 Oct 2026 18:26:01 GMT"
+                },
+                {
+                  "key": "keep-alive",
+                  "value": "timeout=60"
+                },
+                {
+                  "key": "connection",
+                  "value": "keep-alive"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n  \"id\": 1,\n  \"professor\": {\n    \"id\": 1,\n    \"usuario\": {\n      \"id\": 10,\n      \"nome\": \"Myah Wyman\",\n      \"email\": \"Brandon_Corkery@yahoo.com\",\n      \"tipoUsuario\": \"PROFESSOR\"\n    },\n    \"cursoId\": 1,\n    \"titulacao\": \"DOUTORADO\",\n    \"descricao\": \"Professor da área de desenvolvimento de sistemas\"\n  },\n  \"cursoId\": 1\n}"
+            }
+          ]
+        },
+        {
+          "name": "atualizar perfil",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token_coordenador}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"professorId\": 1,\r\n    \"cursoId\": 2\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/coordenadores/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "coordenadores",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "New Request",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/usuarios/",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "usuarios",
+            ""
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080/api/usuarios"
+    }
+  ]
+}
