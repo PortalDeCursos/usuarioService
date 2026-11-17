@@ -4,6 +4,7 @@ import PortalTADS.usuarioService.exception.CursoNaoEncontradoException;
 import PortalTADS.usuarioService.exception.ErroIntegracaoException;
 import PortalTADS.usuarioService.exception.ServicoCursoIndisponivelException;
 import PortalTADS.usuarioService.exception.TimeoutIntegracaoException;
+import PortalTADS.usuarioService.model.dto.curso.cursoResponseDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -24,22 +25,23 @@ public class cursoClient {
 
     public Boolean existeCurso(Long id) {
         try {
-            Boolean existe = webClient.get()
-                    .uri("/{id}/existe", id)
+            cursoResponseDTO curso = webClient.get()
+                    .uri("/cursos/{id}", id)
                     .retrieve()
                     .onStatus(status -> status.value() == 404, response -> Mono.error(new CursoNaoEncontradoException()))
+                    .onStatus(status -> status.value() == 400, response -> Mono.error(new CursoNaoEncontradoException()))
                     .onStatus(status -> status.value() == 503, response -> Mono.error(new ServicoCursoIndisponivelException()))
                     .onStatus(status -> status.value() == 504, response -> Mono.error(new TimeoutIntegracaoException()))
                     .onStatus(HttpStatusCode::isError, response -> Mono.error(new ErroIntegracaoException()))
-                    .bodyToMono(Boolean.class)
+                    .bodyToMono(cursoResponseDTO.class)
                     .timeout(Duration.ofSeconds(5))
                     .block();
 
-            if (Boolean.FALSE.equals(existe)) {
+            if (curso == null || curso.getId() == null) {
                 throw new CursoNaoEncontradoException();
             }
 
-            return existe;
+            return true;
         } catch (CursoNaoEncontradoException | ServicoCursoIndisponivelException | TimeoutIntegracaoException | ErroIntegracaoException e) {
             throw e;
         } catch (Exception e) {
@@ -51,7 +53,7 @@ public class cursoClient {
                 throw new ServicoCursoIndisponivelException("Serviço dependente indisponível", e);
             }
             if (e instanceof WebClientResponseException respEx) {
-                if (respEx.getStatusCode() == HttpStatus.NOT_FOUND || respEx.getStatusCode() == HttpStatus.UNPROCESSABLE_ENTITY) {
+                if (respEx.getStatusCode() == HttpStatus.NOT_FOUND || respEx.getStatusCode() == HttpStatus.BAD_REQUEST || respEx.getStatusCode() == HttpStatus.UNPROCESSABLE_ENTITY) {
                     throw new CursoNaoEncontradoException();
                 } else if (respEx.getStatusCode() == HttpStatus.SERVICE_UNAVAILABLE) {
                     throw new ServicoCursoIndisponivelException();
