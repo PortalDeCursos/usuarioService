@@ -21,21 +21,14 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-//    @ResponseStatus(HttpStatus.BAD_REQUEST)
-//    @ExceptionHandler(MethodArgumentNotValidException.class)
-//    public ProblemDetail handleValidation(MethodArgumentNotValidException ex) {
-//        var pd = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Erro de validação");
-//        pd.setProperty("errors", extrairErros(ex));
-//        return pd;
-//    }
-//
-//    private Map<String, String> extrairErros(MethodArgumentNotValidException ex) {
-//        Map<String, String> erros = new HashMap<>();
-//        for (FieldError fieldError : ex.getBindingResult().getFieldErrors()) {
-//            erros.put(fieldError.getField(), fieldError.getDefaultMessage());
-//        }
-//        return erros;
-//    }
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ProblemDetail handleValidation(MethodArgumentNotValidException ex) {
+        var pd = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Erro de validação");
+        pd.setProperty("errors", extrairErros(ex));
+        return pd;
+    }
+
 
     private Map<String, String> extrairErros(MethodArgumentNotValidException ex) {
         Map<String, String> erros = new HashMap<>();
