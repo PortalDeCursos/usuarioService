@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Table(name = "foto_perfil")
+@Entity
 public class fotoEntity {
 
     @Id
