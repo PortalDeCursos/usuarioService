@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 public class fotoResponseDTO {
     private Long id;
     private Long usuarioId;
-    private String caminhoArquivo;
-    private LocalDateTime criadoEm;
-    private LocalDateTime atualizadoEm;
+    private String nomeArquivo;
+
 }

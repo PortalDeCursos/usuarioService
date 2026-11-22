@@ -25,24 +25,7 @@ public class fotoEntity {
     )
     private usuarioEntity usuario;
 
-    @Column(name = "caminho_arquivo", nullable = false, length = 500)
-    private String caminhoArquivo;
+    @Column(name = "nomeArquivo", nullable = false, length = 500)
+    private String nomeArquivo;
 
-    @Column(name = "criado_em", updatable = false)
-    private LocalDateTime criadoEm;
-
-    @Column(name = "atualizado_em")
-    private LocalDateTime atualizadoEm;
-
-    @PrePersist
-    protected void prePersist() {
-        LocalDateTime agora = LocalDateTime.now();
-        this.criadoEm = agora;
-        this.atualizadoEm = agora;
-    }
-
-    @PreUpdate
-    protected void preUpdate() {
-        this.atualizadoEm = LocalDateTime.now();
-    }
 }

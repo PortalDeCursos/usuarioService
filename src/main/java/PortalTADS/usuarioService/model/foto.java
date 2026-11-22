@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 public class foto {
     private Long id;
     private Long usuarioId;
-    private String caminhoArquivo;
+    private String nomeArquivo;
 
 }
