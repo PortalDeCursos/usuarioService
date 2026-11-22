@@ -38,7 +38,7 @@ public class fotoService {
 
 
 
-    public fotoResponseDTO salvarFoto(fotoRequestDTO request) throws IOException {
+    public fotoResponseDTO salvarFoto(fotoRequestDTO request) {
 
         if(!usuarioRepository.existsById(request.getUsuarioId())){
             throw new UsuarioNaoEncontradoException("Usuário não encontrado");

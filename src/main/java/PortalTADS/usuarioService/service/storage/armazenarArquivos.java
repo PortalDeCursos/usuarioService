@@ -22,17 +22,23 @@ public class armazenarArquivos {
 
 
     /** Grava o conteúdo com um nome gerado pelo servidor e devolve esse nome. */
-    public String salvar(String prefixo, String extensao, byte[] conteudo) throws IOException {
+    public String salvar(String prefixo, String extensao, byte[] conteudo) {
         String nome = "%s-%s.%s".formatted(prefixo, UUID.randomUUID(), extensao);
-        Files.write(resolver(nome), conteudo);
-        return nome;
+        try {
+            Files.write(resolver(nome), conteudo);
+            return nome;
+        } catch (IOException e) {
+            throw new IllegalStateException("Falha ao gravar o arquivo", e);
+        }
     }
 
-    public void apagar(String nome) throws IOException {
-        if (nome == null) {
-            return;
+    public void apagar(String nome) {
+        if (nome == null) return;
+        try {
+            Files.deleteIfExists(resolver(nome));
+        } catch (IOException e) {
+            throw new IllegalStateException("Falha ao apagar o arquivo", e);
         }
-        Files.deleteIfExists(resolver(nome));
     }
 
 
