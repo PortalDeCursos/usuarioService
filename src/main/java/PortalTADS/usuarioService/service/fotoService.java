@@ -63,4 +63,14 @@ public class fotoService {
         return fotoMapper.toResponseDTO(entity);
 
     }
+
+    public Path buscarFoto(Long usuarioId) {
+
+        fotoEntity entity = fotoRepository.findByUsuarioId(usuarioId)
+                .orElseThrow(() -> new UsuarioNaoEncontradoException("Foto não encontrada para o usuário com ID: " + usuarioId));
+
+        return armazenarArquivos.buscarArquivo(entity.getNomeArquivo())
+                .orElseThrow(() -> new UsuarioNaoEncontradoException("Arquivo de foto não encontrado para o usuário com ID: " + usuarioId));
+
+    }
 }

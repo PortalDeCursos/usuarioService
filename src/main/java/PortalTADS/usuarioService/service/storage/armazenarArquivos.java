@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Optional;
 import java.util.UUID;
 
 @Component
@@ -20,6 +21,11 @@ public class armazenarArquivos {
         Files.createDirectories(this.diretorio);
     }
 
+    public Optional<Path> buscarArquivo(String nome) {
+        if (nome == null) return Optional.empty();
+        Path arquivo = resolver(nome);
+        return Files.isRegularFile(arquivo) ? Optional.of(arquivo) : Optional.empty();
+    }
 
     /** Grava o conteúdo com um nome gerado pelo servidor e devolve esse nome. */
     public String salvar(String prefixo, String extensao, byte[] conteudo) {
