@@ -1,6 +1,6 @@
 package PortalTADS.usuarioService.controller;
 
-import PortalTADS.usuarioService.model.dto.login.loginRequestDTO;
+import PortalTADS.usuarioService.model.dto.login.LoginRequestDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,7 +28,7 @@ class AutenticacaoControllerIT {
     @Test
     @DisplayName("Deve realizar login com sucesso quando o administrador informar credenciais válidas")
     void deveRealizarLoginComSucessoQuandoCredenciaisDoAdminForemValidas() throws Exception {
-        loginRequestDTO request = new loginRequestDTO("admin@portaltads.com", "suasenha");
+        LoginRequestDTO request = new LoginRequestDTO("admin@portaltads.com", "suasenha");
 
         mockMvc.perform(post("/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -45,8 +45,8 @@ class AutenticacaoControllerIT {
     @DisplayName("Deve retornar 401 quando o usuário informar um e-mail incorreto")
     void deveRetornar401QuandoEmailForIncorreto() throws Exception {
 
-        loginRequestDTO request =
-                new loginRequestDTO("errado@portaltads.com", "suasenha");
+        LoginRequestDTO request =
+                new LoginRequestDTO("errado@portaltads.com", "suasenha");
 
         mockMvc.perform(post("/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
