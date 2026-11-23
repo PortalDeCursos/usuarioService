@@ -168,6 +168,26 @@ public class GlobalExceptionHandler {
                 .body(problem);
     }
 
+    @ExceptionHandler(UsuarioJaTemFotoException.class)
+    public ResponseEntity<ProblemDetail> handleBadCredentials(
+            UsuarioJaTemFotoException ex,
+            HttpServletRequest request) {
+
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
+                HttpStatus.CONFLICT,
+                "Usuário já possui uma foto cadastrada");
+        problem.setTitle("Falha em cadastrar foto");
+        problem.setProperty("timestamp", LocalDateTime.now());
+        if (request != null && request.getRequestURI() != null) {
+            problem.setInstance(URI.create(request.getRequestURI()));
+        }
+
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(problem);
+    }
+
+
     @ExceptionHandler(CursoNaoEncontradoException.class)
     public ResponseEntity<ProblemDetail> handleCursoNaoEncontrado(
             CursoNaoEncontradoException ex,
