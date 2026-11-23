@@ -20,7 +20,7 @@ public class fotoController {
     private final fotoService fotoService;
 
     @PostMapping
-    public ResponseEntity<fotoResponseDTO> criarCoordenador(@RequestBody @Valid fotoRequestDTO request) {
+    public ResponseEntity<fotoResponseDTO> criarCoordenador(@ModelAttribute fotoRequestDTO request) {
         fotoResponseDTO response = fotoService.salvarFoto(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
