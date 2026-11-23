@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface fotoRepository extends JpaRepository<fotoEntity, Long> {
+    boolean existsByUsuarioId(Long usuarioId);
 }

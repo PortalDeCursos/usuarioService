@@ -1,5 +1,6 @@
 package PortalTADS.usuarioService.service;
 
+import PortalTADS.usuarioService.exception.UsuarioJaTemFotoException;
 import PortalTADS.usuarioService.exception.UsuarioNaoEncontradoException;
 import PortalTADS.usuarioService.model.dto.foto.fotoRequestDTO;
 import PortalTADS.usuarioService.model.dto.foto.fotoResponseDTO;
@@ -10,6 +11,7 @@ import PortalTADS.usuarioService.repository.fotoRepository;
 import PortalTADS.usuarioService.repository.usuarioRepository;
 import PortalTADS.usuarioService.service.storage.armazenarArquivos;
 import PortalTADS.usuarioService.service.storage.processarImagem;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 
 import org.apache.tika.Tika;
@@ -38,10 +40,15 @@ public class fotoService {
 
 
 
+    @Transactional
     public fotoResponseDTO salvarFoto(fotoRequestDTO request) {
 
         if(!usuarioRepository.existsById(request.getUsuarioId())){
             throw new UsuarioNaoEncontradoException("Usuário não encontrado");
+        }
+
+        if(fotoRepository.existsByUsuarioId(request.getUsuarioId())){
+            throw new UsuarioJaTemFotoException(request.getUsuarioId());
         }
 
 
@@ -49,6 +56,7 @@ public class fotoService {
         String nomeArquivo = armazenarArquivos.salvar("foto", "png", png);
 
         foto fotoModel = fotoMapper.toModel(request);
+        fotoModel.setNomeArquivo(nomeArquivo);
         fotoModel.setNomeArquivo(nomeArquivo);
         fotoEntity entity = fotoMapper.toEntity(fotoModel);
         fotoRepository.save(entity);

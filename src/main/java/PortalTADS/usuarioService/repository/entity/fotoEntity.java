@@ -25,7 +25,7 @@ public class fotoEntity {
     )
     private usuarioEntity usuario;
 
-    @Column(name = "nomeArquivo", nullable = false, length = 500)
+    @Column(name = "nome_arquivo", nullable = false, length = 500)
     private String nomeArquivo;
 
 }
