@@ -2,6 +2,7 @@ package PortalTADS.usuarioService.service.storage;
 
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -9,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
 import java.util.UUID;
+import org.springframework.core.io.Resource;
 
 @Component
 public class armazenarArquivos {
@@ -21,10 +23,11 @@ public class armazenarArquivos {
         Files.createDirectories(this.diretorio);
     }
 
-    public Optional<Path> buscarArquivo(String nome) {
+    public Optional<Resource> buscarArquivo(String nome) {
         if (nome == null) return Optional.empty();
         Path arquivo = resolver(nome);
-        return Files.isRegularFile(arquivo) ? Optional.of(arquivo) : Optional.empty();
+        if (!Files.isRegularFile(arquivo)) return Optional.empty();
+        return Optional.of(new FileSystemResource(arquivo));
     }
 
     /** Grava o conteúdo com um nome gerado pelo servidor e devolve esse nome. */

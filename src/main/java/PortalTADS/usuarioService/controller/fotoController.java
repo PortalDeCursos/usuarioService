@@ -4,11 +4,11 @@ package PortalTADS.usuarioService.controller;
 import PortalTADS.usuarioService.model.dto.foto.fotoRequestDTO;
 import PortalTADS.usuarioService.model.dto.foto.fotoResponseDTO;
 import PortalTADS.usuarioService.service.fotoService;
-import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -31,11 +31,9 @@ public class fotoController {
     }
 
     @GetMapping("/{usuarioId}")
-    public ResponseEntity<FileSystemResource> buscarFoto(@PathVariable Long usuarioId) {
-        Path arquivo = fotoService.buscarFoto(usuarioId);
-
+    public ResponseEntity<Resource> buscarFoto(@PathVariable Long usuarioId) {
         return ResponseEntity.ok()
                 .contentType(MediaType.IMAGE_PNG)
-                .body(new FileSystemResource(arquivo));
+                .body(fotoService.buscarFoto(usuarioId));
     }
 }
