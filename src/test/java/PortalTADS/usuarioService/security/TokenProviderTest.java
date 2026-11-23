@@ -1,8 +1,8 @@
     package PortalTADS.usuarioService.security;
 
-    import PortalTADS.usuarioService.enums.roleUsuario;
+    import PortalTADS.usuarioService.enums.RoleUsuario;
     import PortalTADS.usuarioService.exception.TokenGeracaoException;
-    import PortalTADS.usuarioService.model.usuario;
+    import PortalTADS.usuarioService.model.Usuario;
     import io.jsonwebtoken.Claims;
     import io.jsonwebtoken.Jwts;
     import io.jsonwebtoken.security.Keys;
@@ -21,14 +21,14 @@
 
     class TokenProviderTest {
 
-        private tokenProvider tokenProvider;
+        private TokenProvider tokenProvider;
 
         private final String segredo = "14I15oujcYSvV7r7Lghmg+HUMJ5n8YXDYmQoyHFiWMA=";
         private final long tempoExpiracao = 36000000L; // 10 horas em ms
 
         @BeforeEach
         void setUp() {
-            tokenProvider = new tokenProvider();
+            tokenProvider = new TokenProvider();
             // Injeta os valores das propriedades simulando o application.properties / .env
             ReflectionTestUtils.setField(tokenProvider, "segredo", segredo);
             ReflectionTestUtils.setField(tokenProvider, "tempoExpiracao", tempoExpiracao);
@@ -38,14 +38,14 @@
         @DisplayName("Deve gerar token JWT com sucesso para um usuário ADMIN e validar assinatura e role")
         void deveGerarTokenAdminComSucessoEValidarAssinaturaERole() {
             // 1. Cenário: criação do usuário ADMIN com email e senha fornecidos
-            usuario admin = new usuario();
+            Usuario admin = new Usuario();
             admin.setId(1L);
             admin.setNome("Administrador");
             admin.setEmail("admin@portaltads.com");
             admin.setSenha("suasenha");
-            admin.setTipoUsuario(roleUsuario.ADMIN);
+            admin.setTipoUsuario(RoleUsuario.ADMIN);
 
-            userDetails userDetails = new userDetails(admin);
+            UserDetails userDetails = new UserDetails(admin);
             Authentication authentication = new UsernamePasswordAuthenticationToken(
                     userDetails,
                     admin.getSenha(),
@@ -124,11 +124,11 @@
         @Test
         @DisplayName("Deve lançar TokenGeracaoException quando o usuário tiver username ou role nulos")
         void deveLancarExcecaoQuandoDadosDoUsuarioForemInvalidos() {
-            usuario usuarioInvalido = new usuario();
+            Usuario usuarioInvalido = new Usuario();
             usuarioInvalido.setEmail(null);
-            usuarioInvalido.setTipoUsuario(roleUsuario.ALUNO);
+            usuarioInvalido.setTipoUsuario(RoleUsuario.ALUNO);
 
-            userDetails userDetails = new userDetails(usuarioInvalido);
+            UserDetails userDetails = new UserDetails(usuarioInvalido);
             Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, "senha");
 
             TokenGeracaoException exception = assertThrows(
@@ -143,8 +143,8 @@
         @Test
         @DisplayName("Deve lançar TokenGeracaoException quando a chave secreta for nula ou vazia")
         void deveLancarExcecaoQuandoChaveSecretaForNulaOuVazia() {
-            usuario admin = new usuario(1L, "Admin", "admin@portaltads.com", "123456", roleUsuario.ADMIN);
-            userDetails userDetails = new userDetails(admin);
+            Usuario admin = new Usuario(1L, "Admin", "admin@portaltads.com", "123456", RoleUsuario.ADMIN);
+            UserDetails userDetails = new UserDetails(admin);
             Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, "123456", userDetails.getAuthorities());
 
             // Teste com segredo nulo
@@ -167,8 +167,8 @@
         @Test
         @DisplayName("Deve lançar TokenGeracaoException quando a chave secreta for insuficiente ou corrompida")
         void deveLancarExcecaoQuandoChaveSecretaForInvalidaOuCorrompida() {
-            usuario admin = new usuario(1L, "Admin", "admin@portaltads.com", "123456", roleUsuario.ADMIN);
-            userDetails userDetails = new userDetails(admin);
+            Usuario admin = new Usuario(1L, "Admin", "admin@portaltads.com", "123456", RoleUsuario.ADMIN);
+            UserDetails userDetails = new UserDetails(admin);
             Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, "123456", userDetails.getAuthorities());
 
             // Chave curta demais para HMAC-SHA (menos de 256 bits / 32 bytes)
