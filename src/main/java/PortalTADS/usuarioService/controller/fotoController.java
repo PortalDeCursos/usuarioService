@@ -36,4 +36,10 @@ public class fotoController {
                 .contentType(MediaType.IMAGE_PNG)
                 .body(fotoService.buscarFoto(usuarioId));
     }
+
+    @PutMapping
+    public ResponseEntity<fotoResponseDTO> atualizarFoto(@ModelAttribute fotoRequestDTO request) {
+        fotoResponseDTO response = fotoService.atualizarFoto(request);
+        return ResponseEntity.ok(response);
+    }
 }

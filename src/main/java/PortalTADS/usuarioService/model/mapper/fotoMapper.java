@@ -14,5 +14,6 @@ public interface fotoMapper {
     @Mapping(target = "usuario.id", source = "usuarioId")
     fotoEntity toEntity(foto fotoModel);
 
+    @Mapping(target = "usuarioId", source = "usuario.id")
     fotoResponseDTO toResponseDTO(fotoEntity entity);
 }

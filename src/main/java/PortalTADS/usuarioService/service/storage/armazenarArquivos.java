@@ -30,6 +30,12 @@ public class armazenarArquivos {
         return Optional.of(new FileSystemResource(arquivo));
     }
 
+    public String atualizar(String nomeAntigo, String prefixo, String extensao, byte[] conteudo) {
+        String novoNome = salvar(prefixo, extensao, conteudo);
+        apagar(nomeAntigo);
+        return novoNome;
+    }
+
     /** Grava o conteúdo com um nome gerado pelo servidor e devolve esse nome. */
     public String salvar(String prefixo, String extensao, byte[] conteudo) {
         String nome = "%s-%s.%s".formatted(prefixo, UUID.randomUUID(), extensao);

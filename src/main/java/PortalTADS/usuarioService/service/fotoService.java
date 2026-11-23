@@ -19,6 +19,8 @@ import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -73,5 +75,18 @@ public class fotoService {
 
         return armazenarArquivos.buscarArquivo(entity.getNomeArquivo())
                 .orElseThrow(() -> new FotoNaoEncontradaException(usuarioId));
+    }
+
+    public fotoResponseDTO atualizarFoto(fotoRequestDTO request) {
+        fotoEntity foto = fotoRepository.findByUsuarioId(request.getUsuarioId())
+                .orElseThrow(() -> new FotoNaoEncontradaException(request.getUsuarioId()));
+
+        byte[] bytes = processarImagem.paraPng(request.getFoto(), TAMANHO, MAX_BYTES);
+        String novoNome = armazenarArquivos.atualizar(foto.getNomeArquivo(), "foto", "png", bytes);
+
+        foto.setNomeArquivo(novoNome);
+        fotoRepository.save(foto);
+        return fotoMapper.toResponseDTO(foto);
+
     }
 }
