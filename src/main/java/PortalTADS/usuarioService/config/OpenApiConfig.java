@@ -35,6 +35,7 @@ public class OpenApiConfig {
                                 -  **Professores**: Gestão do corpo docente vinculado a cursos e titulações acadêmicas.
                                 -  **Alunos**: Cadastro e acompanhamento de discentes vinculados a cursos.
                                 -  **Coordenadores**: Gestão de coordenação de cursos integrada aos professores.
+                                -  **Fotos**: Gerenciamento de fotos de perfil (upload, consulta e atualização).
                                 
                                 ---
                                 
@@ -56,11 +57,8 @@ public class OpenApiConfig {
                 )
                 .servers(List.of(
                         new Server()
-                                .url("http://localhost:8080")
-                                .description("Ambiente Local / Desenvolvimento"),
-                        new Server()
-                                .url("https://api.portaltads.com")
-                                .description("Ambiente de Produção (Exemplo)")
+                                .url("http://localhost:8080/api/usuarios/")
+                                .description("Ambiente Local / Desenvolvimento")
                 ))
                 .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
                 .components(new Components()

@@ -12,6 +12,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 import java.net.URI;
 import java.time.LocalDateTime;
@@ -167,6 +168,45 @@ public class GlobalExceptionHandler {
                 .body(problem);
     }
 
+    @ExceptionHandler(UsuarioJaTemFotoException.class)
+    public ResponseEntity<ProblemDetail> handleBadCredentials(
+            UsuarioJaTemFotoException ex,
+            HttpServletRequest request) {
+
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
+                HttpStatus.CONFLICT,
+                "Usuário já possui uma foto cadastrada");
+        problem.setTitle("Falha em cadastrar foto");
+        problem.setProperty("timestamp", LocalDateTime.now());
+        if (request != null && request.getRequestURI() != null) {
+            problem.setInstance(URI.create(request.getRequestURI()));
+        }
+
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(problem);
+    }
+
+    @ExceptionHandler(FotoNaoEncontradaException.class)
+    public ResponseEntity<ProblemDetail> handleBadCredentials(
+            FotoNaoEncontradaException ex,
+            HttpServletRequest request) {
+
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
+                HttpStatus.NOT_FOUND,
+                "Foto não encontrada");
+        problem.setTitle("Falha em procurar foto");
+        problem.setProperty("timestamp", LocalDateTime.now());
+        if (request != null && request.getRequestURI() != null) {
+            problem.setInstance(URI.create(request.getRequestURI()));
+        }
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(problem);
+    }
+
+
     @ExceptionHandler(CursoNaoEncontradoException.class)
     public ResponseEntity<ProblemDetail> handleCursoNaoEncontrado(
             CursoNaoEncontradoException ex,
@@ -241,6 +281,17 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_GATEWAY)
                 .body(problem);
+    }
+
+    @ExceptionHandler(imagemInvalidaException.class)
+    public ProblemDetail imagemInvalida(imagemInvalidaException e) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage());
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ProblemDetail uploadGrande(MaxUploadSizeExceededException e) {
+        return ProblemDetail.forStatusAndDetail(
+                HttpStatus.PAYLOAD_TOO_LARGE, "Arquivo excede o tamanho máximo permitido");
     }
 
 }
