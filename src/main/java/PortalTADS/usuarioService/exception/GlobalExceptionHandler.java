@@ -187,6 +187,25 @@ public class GlobalExceptionHandler {
                 .body(problem);
     }
 
+    @ExceptionHandler(FotoNaoEncontradaException.class)
+    public ResponseEntity<ProblemDetail> handleBadCredentials(
+            FotoNaoEncontradaException ex,
+            HttpServletRequest request) {
+
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
+                HttpStatus.NOT_FOUND,
+                "Foto não encontrada");
+        problem.setTitle("Falha em procurar foto");
+        problem.setProperty("timestamp", LocalDateTime.now());
+        if (request != null && request.getRequestURI() != null) {
+            problem.setInstance(URI.create(request.getRequestURI()));
+        }
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(problem);
+    }
+
 
     @ExceptionHandler(CursoNaoEncontradoException.class)
     public ResponseEntity<ProblemDetail> handleCursoNaoEncontrado(

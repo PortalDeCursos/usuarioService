@@ -1,5 +1,6 @@
 package PortalTADS.usuarioService.service;
 
+import PortalTADS.usuarioService.exception.FotoNaoEncontradaException;
 import PortalTADS.usuarioService.exception.UsuarioJaTemFotoException;
 import PortalTADS.usuarioService.exception.UsuarioNaoEncontradoException;
 import PortalTADS.usuarioService.model.dto.foto.fotoRequestDTO;
@@ -16,6 +17,7 @@ import lombok.AllArgsConstructor;
 
 import org.apache.tika.Tika;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -44,7 +46,7 @@ public class fotoService {
     public fotoResponseDTO salvarFoto(fotoRequestDTO request) {
 
         if(!usuarioRepository.existsById(request.getUsuarioId())){
-            throw new UsuarioNaoEncontradoException("Usuário não encontrado");
+            throw new UsuarioNaoEncontradoException(request.getUsuarioId());
         }
 
         if(fotoRepository.existsByUsuarioId(request.getUsuarioId())){
@@ -64,13 +66,12 @@ public class fotoService {
 
     }
 
-    public Path buscarFoto(Long usuarioId) {
+    public Resource buscarFoto(Long usuarioId) {
 
         fotoEntity entity = fotoRepository.findByUsuarioId(usuarioId)
-                .orElseThrow(() -> new UsuarioNaoEncontradoException("Foto não encontrada para o usuário com ID: " + usuarioId));
+                .orElseThrow(() -> new UsuarioNaoEncontradoException(usuarioId));
 
         return armazenarArquivos.buscarArquivo(entity.getNomeArquivo())
-                .orElseThrow(() -> new UsuarioNaoEncontradoException("Arquivo de foto não encontrado para o usuário com ID: " + usuarioId));
-
+                .orElseThrow(() -> new FotoNaoEncontradaException(usuarioId));
     }
 }
