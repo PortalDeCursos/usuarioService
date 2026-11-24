@@ -9,11 +9,12 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Set;
 
 @Component
 public class ProcessarImagem {
 
-    private static final String TIPO_PNG = "image/png";
+    private static final Set<String> TIPOS_PERMITIDOS = Set.of("image/png", "image/jpeg");
 
     private final Tika tika = new Tika();
 
@@ -38,8 +39,8 @@ public class ProcessarImagem {
         } catch (IOException e) {
             throw new imagemInvalidaException("Não foi possível ler a imagem enviada", e);
         }
-        if (!TIPO_PNG.equals(tipoReal)) {
-            throw new imagemInvalidaException("Apenas PNG é permitido");
+        if (!TIPOS_PERMITIDOS.contains(tipoReal)) {
+            throw new imagemInvalidaException("Apenas PNG e JPEG são permitidos");
         }
 
         try (InputStream in = arquivo.getInputStream()) {
