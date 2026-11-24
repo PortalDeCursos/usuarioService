@@ -5,11 +5,20 @@ import PortalTADS.usuarioService.enums.TitulacaoProfessor;
 import PortalTADS.usuarioService.repository.*;
 import PortalTADS.usuarioService.repository.entity.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Random;
 
 /**
@@ -18,6 +27,9 @@ import java.util.Random;
  * Premissa: a tabela "cursos" (serviço de cursos) já foi populada com ids de 1 a 110.
  * Este seeder NÃO valida isso. Se os cursos não existirem, os vínculos ficarão
  * apontando para ids inexistentes, sem erro no banco.
+ *
+ * As fotos ficam em src/main/resources/seed/fotos e são copiadas para app.upload-dir
+ * na primeira execução.
  */
 @Component
 @RequiredArgsConstructor
@@ -25,14 +37,7 @@ public class UsuariosSeeder implements CommandLineRunner {
 
     private static final String SENHA = "suasenha";
     private static final String DOMINIO = "@portalcuros.com";
-
-    private static final String[] FOTOS = {
-            "foto_perfil_1.png",
-            "foto_perfil_2.png",
-            "foto_perfil_3.png",
-            "foto_perfil_4.png",
-            "foto_perfil_5.png"
-    };
+    private static final String PASTA_FOTOS_SEED = "classpath:seed/fotos/*.png";
 
     private static final int TOTAL_CURSOS = 110;
     private static final int TOTAL_ALUNOS = 220;
@@ -41,6 +46,9 @@ public class UsuariosSeeder implements CommandLineRunner {
     // Semente fixa: rodar de novo sorteia as mesmas titulações na mesma ordem
     private static final long SEMENTE = 42L;
 
+    @Value("${app.upload-dir}")
+    private String uploadDir;
+
     private final PasswordEncoder passwordEncoder;
     private final UsuarioRepository usuarioRepository;
     private final AlunoRepository alunoRepository;
@@ -48,16 +56,21 @@ public class UsuariosSeeder implements CommandLineRunner {
     private final CoordenadorRepository coordenadorRepository;
     private final FotoRepository fotoRepository;
 
+    // Preenchido em run() com os nomes das fotos copiadas
+    private String[] fotos;
+
     @Override
     @Transactional
-    public void run(String... args) {
+    public void run(String... args) throws IOException {
+        fotos = copiarFotosParaUpload();
+
         Random random = new Random(SEMENTE);
         TitulacaoProfessor[] titulacoes = TitulacaoProfessor.values();
 
         // ADMIN
         UsuarioEntity admin = obterOuCriarUsuario(
                 "Administrador", "silva.neto1@escolar.ifrn.edu.br", RoleUsuario.ADMIN);
-        garantirFoto(admin, FOTOS[0]);
+        garantirFoto(admin, fotoDo(0));
 
         // COORDENADORES: um por curso (1 a 110).
         // Cada coordenador tem um registro de professor do mesmo curso.
@@ -94,14 +107,52 @@ public class UsuariosSeeder implements CommandLineRunner {
         }
     }
 
+    // ---------- cópia das fotos ----------
+
+    /**
+     * Copia as fotos de classpath:seed/fotos para app.upload-dir.
+     * Não sobrescreve arquivos que já existem na pasta de destino.
+     * Devolve os nomes dos arquivos copiados, em ordem alfabética.
+     */
+    private String[] copiarFotosParaUpload() throws IOException {
+        Resource[] recursos = new PathMatchingResourcePatternResolver()
+                .getResources(PASTA_FOTOS_SEED);
+
+        if (recursos.length == 0) {
+            throw new IllegalStateException(
+                    "Nenhuma foto encontrada em seed/fotos (src/main/resources/seed/fotos)");
+        }
+
+        Arrays.sort(recursos, Comparator.comparing(Resource::getFilename));
+
+        Path destino = Path.of(uploadDir).toAbsolutePath().normalize();
+        Files.createDirectories(destino);
+
+        String[] nomes = new String[recursos.length];
+
+        for (int i = 0; i < recursos.length; i++) {
+            String nome = recursos[i].getFilename();
+            nomes[i] = nome;
+
+            Path arquivoDestino = destino.resolve(nome);
+            if (Files.notExists(arquivoDestino)) {
+                try (InputStream in = recursos[i].getInputStream()) {
+                    Files.copy(in, arquivoDestino);
+                }
+            }
+        }
+
+        return nomes;
+    }
+
+    private String fotoDo(int indice) {
+        return fotos[indice % fotos.length];
+    }
+
     // ---------- regras de distribuição ----------
 
     private long cursoDoAluno(int i) {
         return ((i - 1) % TOTAL_CURSOS) + 1;
-    }
-
-    private String fotoDo(int indice) {
-        return FOTOS[indice % FOTOS.length];
     }
 
     private TitulacaoProfessor sortearTitulacao(Random random, TitulacaoProfessor[] titulacoes) {
