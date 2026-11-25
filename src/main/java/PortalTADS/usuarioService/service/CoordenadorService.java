@@ -1,6 +1,7 @@
 package PortalTADS.usuarioService.service;
 
 import PortalTADS.usuarioService.client.CursoClient;
+import PortalTADS.usuarioService.enums.RoleUsuario;
 import PortalTADS.usuarioService.exception.AcessoProibidoException;
 import PortalTADS.usuarioService.exception.CoordenadorJaCadastratoException;
 import PortalTADS.usuarioService.exception.UsuarioNaoEncontradoException;
@@ -36,9 +37,11 @@ public class CoordenadorService {
         cursoClient.existeCurso(request.cursoId());
         Coordenador coordenadorModel = coordenadorMapper.toModel(request);
 
+
         ProfessorEntity professor = professorRepository.findById(request.professorId())
                 .orElseThrow(() -> new UsuarioNaoEncontradoException(request.professorId()));
 
+        professor.getUsuario().setTipoUsuario(RoleUsuario.COORDENADOR);
         CoordenadorEntity entity = coordenadorMapper.toEntity(coordenadorModel);
         entity.setProfessor(professor);
         CoordenadorEntity salvo = coordenadorRepository.save(entity);
