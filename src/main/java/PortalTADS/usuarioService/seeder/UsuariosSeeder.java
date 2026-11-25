@@ -24,9 +24,11 @@ import java.util.Random;
 /**
  * Seed de desenvolvimento.
  *
- * Premissa: a tabela "cursos" (serviço de cursos) já foi populada com ids de 1 a 110.
- * Este seeder NÃO valida isso. Se os cursos não existirem, os vínculos ficarão
- * apontando para ids inexistentes, sem erro no banco.
+ * Premissas:
+ * - A tabela "cursos" (serviço de cursos) já foi populada com ids de 1 a 110.
+ *   Este seeder NÃO valida isso.
+ * - Os usuários com email real (pjpedro150, pjpedro158 e pjpedro152) ficam
+ *   todos no curso CURSO_EMAILS_REAIS.
  *
  * As fotos ficam em src/main/resources/seed/fotos e são copiadas para app.upload-dir
  * na primeira execução.
@@ -42,6 +44,9 @@ public class UsuariosSeeder implements CommandLineRunner {
     private static final int TOTAL_CURSOS = 110;
     private static final int TOTAL_ALUNOS = 220;
     private static final int TOTAL_PROFESSORES = 40;
+
+    // Curso onde ficam os usuários com email real (para teste)
+    private static final long CURSO_EMAILS_REAIS = 1L;
 
     // Semente fixa: rodar de novo sorteia as mesmas titulações na mesma ordem
     private static final long SEMENTE = 42L;
@@ -80,13 +85,14 @@ public class UsuariosSeeder implements CommandLineRunner {
                     "Coordenador " + c, email, RoleUsuario.COORDENADOR);
             garantirFoto(usuario, fotoDo(c));
 
+            long cursoId = cursoDoCoordenador(c);
             TitulacaoProfessor titulacao = sortearTitulacao(random, titulacoes);
             ProfessorEntity professor = garantirProfessor(
-                    usuario, c, titulacao, "Coordenador do curso " + c);
-            garantirCoordenador(professor, c);
+                    usuario, cursoId, titulacao, "Coordenador do curso " + cursoId);
+            garantirCoordenador(professor, cursoId);
         }
 
-        // PROFESSORES: 40, distribuídos nos cursos 1 a 40
+        // PROFESSORES: 40
         for (int j = 1; j <= TOTAL_PROFESSORES; j++) {
             String email = (j == 1) ? "pjpedro158@gmail.com" : "professor" + j + DOMINIO;
             UsuarioEntity usuario = obterOuCriarUsuario(
@@ -94,10 +100,10 @@ public class UsuariosSeeder implements CommandLineRunner {
             garantirFoto(usuario, fotoDo(j));
 
             TitulacaoProfessor titulacao = sortearTitulacao(random, titulacoes);
-            garantirProfessor(usuario, j, titulacao, "Professor de teste");
+            garantirProfessor(usuario, cursoDoProfessor(j), titulacao, "Professor de teste");
         }
 
-        // ALUNOS: 220, dois por curso (ciclo sobre os 110 cursos)
+        // ALUNOS: 220
         for (int i = 1; i <= TOTAL_ALUNOS; i++) {
             String email = (i == 1) ? "pjpedro152@gmail.com" : "aluno" + i + DOMINIO;
             UsuarioEntity usuario = obterOuCriarUsuario(
@@ -151,8 +157,16 @@ public class UsuariosSeeder implements CommandLineRunner {
 
     // ---------- regras de distribuição ----------
 
+    private long cursoDoCoordenador(int c) {
+        return (c == 1) ? CURSO_EMAILS_REAIS : c;
+    }
+
+    private long cursoDoProfessor(int j) {
+        return (j == 1) ? CURSO_EMAILS_REAIS : j;
+    }
+
     private long cursoDoAluno(int i) {
-        return ((i - 1) % TOTAL_CURSOS) + 1;
+        return (i == 1) ? CURSO_EMAILS_REAIS : ((i - 1) % TOTAL_CURSOS) + 1;
     }
 
     private TitulacaoProfessor sortearTitulacao(Random random, TitulacaoProfessor[] titulacoes) {
