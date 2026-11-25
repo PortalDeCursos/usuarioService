@@ -7,6 +7,7 @@ import PortalTADS.usuarioService.repository.entity.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,19 +22,9 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Random;
 
-/**
- * Seed de desenvolvimento.
- *
- * Premissas:
- * - A tabela "cursos" (serviço de cursos) já foi populada com ids de 1 a 110.
- *   Este seeder NÃO valida isso.
- * - Os usuários com email real (pjpedro150, pjpedro158 e pjpedro152) ficam
- *   todos no curso CURSO_EMAILS_REAIS.
- *
- * As fotos ficam em src/main/resources/seed/fotos e são copiadas para app.upload-dir
- * na primeira execução.
- */
+
 @Component
+@Profile("!test")
 @RequiredArgsConstructor
 public class UsuariosSeeder implements CommandLineRunner {
 
@@ -45,10 +36,9 @@ public class UsuariosSeeder implements CommandLineRunner {
     private static final int TOTAL_ALUNOS = 220;
     private static final int TOTAL_PROFESSORES = 40;
 
-    // Curso onde ficam os usuários com email real (para teste)
     private static final long CURSO_EMAILS_REAIS = 1L;
 
-    // Semente fixa: rodar de novo sorteia as mesmas titulações na mesma ordem
+
     private static final long SEMENTE = 42L;
 
     @Value("${app.upload-dir}")
@@ -61,7 +51,7 @@ public class UsuariosSeeder implements CommandLineRunner {
     private final CoordenadorRepository coordenadorRepository;
     private final FotoRepository fotoRepository;
 
-    // Preenchido em run() com os nomes das fotos copiadas
+
     private String[] fotos;
 
     @Override
@@ -77,8 +67,6 @@ public class UsuariosSeeder implements CommandLineRunner {
                 "Administrador", "silva.neto1@escolar.ifrn.edu.br", RoleUsuario.ADMIN);
         garantirFoto(admin, fotoDo(0));
 
-        // COORDENADORES: um por curso (1 a 110).
-        // Cada coordenador tem um registro de professor do mesmo curso.
         for (int c = 1; c <= TOTAL_CURSOS; c++) {
             String email = (c == 1) ? "pjpedro150@gmail.com" : "coordenador" + c + DOMINIO;
             UsuarioEntity usuario = obterOuCriarUsuario(
@@ -92,7 +80,6 @@ public class UsuariosSeeder implements CommandLineRunner {
             garantirCoordenador(professor, cursoId);
         }
 
-        // PROFESSORES: 40
         for (int j = 1; j <= TOTAL_PROFESSORES; j++) {
             String email = (j == 1) ? "pjpedro158@gmail.com" : "professor" + j + DOMINIO;
             UsuarioEntity usuario = obterOuCriarUsuario(
@@ -103,7 +90,6 @@ public class UsuariosSeeder implements CommandLineRunner {
             garantirProfessor(usuario, cursoDoProfessor(j), titulacao, "Professor de teste");
         }
 
-        // ALUNOS: 220
         for (int i = 1; i <= TOTAL_ALUNOS; i++) {
             String email = (i == 1) ? "pjpedro152@gmail.com" : "aluno" + i + DOMINIO;
             UsuarioEntity usuario = obterOuCriarUsuario(
@@ -113,13 +99,7 @@ public class UsuariosSeeder implements CommandLineRunner {
         }
     }
 
-    // ---------- cópia das fotos ----------
 
-    /**
-     * Copia as fotos de classpath:seed/fotos para app.upload-dir.
-     * Não sobrescreve arquivos que já existem na pasta de destino.
-     * Devolve os nomes dos arquivos copiados, em ordem alfabética.
-     */
     private String[] copiarFotosParaUpload() throws IOException {
         Resource[] recursos = new PathMatchingResourcePatternResolver()
                 .getResources(PASTA_FOTOS_SEED);
@@ -155,7 +135,6 @@ public class UsuariosSeeder implements CommandLineRunner {
         return fotos[indice % fotos.length];
     }
 
-    // ---------- regras de distribuição ----------
 
     private long cursoDoCoordenador(int c) {
         return (c == 1) ? CURSO_EMAILS_REAIS : c;
@@ -170,11 +149,9 @@ public class UsuariosSeeder implements CommandLineRunner {
     }
 
     private TitulacaoProfessor sortearTitulacao(Random random, TitulacaoProfessor[] titulacoes) {
-        // Sempre sorteia, mesmo se o registro já existir, para manter a sequência estável
         return titulacoes[random.nextInt(titulacoes.length)];
     }
-
-    // ---------- helpers "garantir" (idempotentes) ----------
+    
 
     private UsuarioEntity obterOuCriarUsuario(String nome, String email, RoleUsuario role) {
         return usuarioRepository.findByEmail(email).orElseGet(() -> {
